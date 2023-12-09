@@ -1,10 +1,10 @@
 from PIL import Image
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = r''
+pytesseract.pytesseract.tesseract_cmd = r'tesseractinstln\tesseract.exe'
 
 
 # Read the image
-image = Image.open("image.png")
+imagen = Image.open('image.png')
 
 # Set PSM to 6 for line segmentation
 pytesseract.config["psm"] = 6
