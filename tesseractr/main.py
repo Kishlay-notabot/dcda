@@ -1,16 +1,13 @@
 from PIL import Image
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = r'tesseractinstln\tesseract.exe'
-
+  
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 # Read the image
-imagen = Image.open('image.png')
-
-# Set PSM to 6 for line segmentation
-pytesseract.config["psm"] = 6
+print(pytesseract.image_to_string(Image.open('image.png')))
 
 # Extract the lines
-boxes = pytesseract.image_to_boxes(image)
+boxes = pytesseract.image_to_boxes('image.png')
 lines = []
 for b in boxes.splitlines():
     # Extract the coordinates of the bounding box
