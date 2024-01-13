@@ -1,0 +1,416 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+    <title>gImageReader 3.4.1 Manual</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+</head>
+
+<body>
+
+<h1>gImageReader 3.4.1 Manual</h1>
+<h2>Contents</h2>
+<ul>
+    <li><a href="#About">About</a>
+    <ul>
+        <li><a href="#Features">Features</a></li>
+        <li><a href="#News">News</a></li>
+    </ul>
+    </li>
+    <li><a href="#Usage">Usage</a>
+    <ul>
+        <li><a href="#Usage_Open">Opening and importing images</a></li>
+        <li><a href="#Usage_View">Viewing and adjusting images</a></li>
+        <li><a href="#Usage_Recognition">Preparing for recognition</a></li>
+        <li><a href="#Usage_RecognizeText">Recognizing and post-processing in plain text mode</a></li>
+        <li><a href="#Usage_RecognizeHOCR">Recognizing and processing hOCR, PDF</a></li>
+        <li><a href="#Usage_Options">Program options</a></li>
+    </ul></li>
+    <li><a href="#InstallTessdata">Installation of tesseract language definitions</a></li>
+    <li><a href="#InstallSpelling">Installation of spelling dictionaries</a></li>
+    <li><a href="#Contributing">Contributing</a></li>
+    <li><a href="#Support">Debugging and support</a></li>
+</ul>
+
+<h2><a name="About">About</a></h2>
+<p>gImageReader is a frontend to <a href="https://github.com/tesseract-ocr/tesseract">tesseract-ocr</a> written in C++.</p>
+<h3><a name="Features">Features</a></h3>
+<ul>
+ <li>Import PDF documents and images from disk, scanning devices, clipboard and screenshots</li>
+ <li>Process multiple images and documents in one go</li>
+ <li>Manual or automatic recognition area definition</li>
+ <li>Recognize to plain text or to hOCR documents</li>
+ <li>Recognized text displayed directly next to the image</li>
+ <li>Post-process the recognized text, including spellchecking</li>
+ <li>Generate PDF documents from hOCR documents</li>
+</ul>
+<h3><a name="News">News</a></h3>
+<p><i>A detailed list of changes can be found in the commit log: https://github.com/manisandro/gImageReader/commits/master</i></p>
+<pre style="max-height: 200px; overflow-y: auto; padding: 1em; border: 1px solid gray;">
+gImageReader 3.4.1 (Jan 29 2023):
+* Bugfixes:
+ - Fix warning about text in pdf incorrectly shown even if PDF has no text
+ - Adapt for enchant2 dictionary location change
+ - [Qt] Fix setting custom font for text editor
+ - Fix crash in batch export dialog when selecting folder with no hocr html files
+ - Assorted Wayland fixes
+ - [Gtk] Fix incorrectly passing export filename to hOCR text and ODT export
+ - [Gtk] Rework Utils::string_html_escape to fix possible unicode string corruption
+* Enhancements:
+ - Add 2px margin to autodetected areas
+ - Allow specifying custom script tessdatas by prepending prefix with script/ and leaving empty lang code
+ - Use correct file extensions in crash save files
+ - Make WConf visibility persistent
+* Updated translations
+* See https://github.com/manisandro/gImageReader/compare/v3.4.0...v3.4.1 for details
+
+gImageReader 3.4.0 (Jan 28 2022):
+* Add support for tesseract 5.0
+* Add Qt6 support
+* Add thumbail view for source documents
+* Add batch mode for recognizing multiple documents
+* Display sources in a tree
+* Allow opening output files directly from the source tree if they exist next to the source with the same basename
+* Allow moving image selection boxes
+* Text: Add multi-tab support
+* HOCR: Allow specifying whether new output is inserted/appended
+* HOCR: Allow opening multiple files at once, also from command line
+* HOCR: Add proof-reading widget (Qt interface only)
+* HOCR: New batch export dialog
+* HOCR: Add quick navigation for low confidence words
+
+gImageReader 3.3.1 (Jul 28 2019):
+* HOCR: propagate attributes to manually added elements (@foghawk)
+* HOCR: improve spelling of hyphenated words (@foghawk)
+* HOCR: improve spelling of words with special characters (@foghawk)
+* HOCR: allow specifying a DPI to assume for image sources when exporting to PDF (@foghawk)
+* HOCR: allow use to choose whether to sanitize hyphens when exporting to PDF
+* HOCR: Attempt to map 639-2 language codes to ISO 639-1 to set spelling language
+* Allow specifying character whitelist / blacklist for recognition
+* Various bugfixes
+* Translation updates
+* Full details in commit log: https://github.com/manisandro/gImageReader/commits/master
+
+gImageReader 3.3.0 (Sep 26 2018):
+* Support tesseract-4.0.0
+* Translation updates
+* See 3.2.9x changelogs for all other feature changes since previous stable
+* Full details in commit log: https://github.com/manisandro/gImageReader/commits/master
+
+gImageReader 3.2.99 (Feb 24 2018):
+* gImageReader 3.3 beta
+* Add support for reading DJVU documents
+* Add support for encrypted PDF files
+* Rewrite HOCR editor and greatly expand its functionality:
+  - Allow displaying confidence values in HOCR tree
+  - Allow clicking in the canvas to jump to the corresponding item in the HOCR tree
+  - Support mass-editing of HOCR child item attributes from parent
+  - Honour font family attributes if possible
+  - Honour and allow toggling bold and italic attributes
+  - Correctly honour the baseline
+  - Add search/replace and substitution list support
+  - Add preview mode while editing
+  - Allow manually adding lines, words and paragraphs
+  - Allow swapping items
+  - Automatically adjust parent bounding boxes when resizing and removing children
+  - Add navigation toolbar to facilitate navigating through the HOCR tree
+  - Use relative paths to source files in HOCR HTML document if source files are on same level or below the HOCR file
+  - Add export to text
+  - Add export to ODT
+  - Allow choosing paper size in PDF export
+  - Allow setting document metadata in PDF export
+  - Allow setting encryption in PDF export
+  - [Qt] Allow using QPrinter as PDF export backend, which has better support for complex scripts
+
+gImageReader 3.2.3 (Jul 01 2017):
+* Fix broken hOCR export
+* Add option to prepend source filename / page to plain text output
+
+gImageReader 3.2.2 (Jun 30 2017):
+* Attempt to use original source image for PDF output
+* Allow collapsing/expanding branches of hOCR tree via context menu
+* Recognize guillemets as quote characters
+* Fix crash when adding zero-page sources
+* Fix possible crash when rapidly switching documents
+* [Gtk] Fix output pane orientation not properly restored
+* [Gtk] Don't crash when rendering of image fails
+* [Gtk] Fix icons not appearing with recent Gtk versions
+* [Qt] Don't display empty image if rendering of downscaled image fails
+
+gImageReader 3.2.1 (Feb 10 2017):
+* Add possibility to rotate individual pages of multipage documents
+* Ensure the tessdata manager downloads compatible tesseract language definitions
+* Add CCITT Group4 compression option for monochrome PDF export
+* Allow choosing between diffuse and threshold dithering for monochrome PDF export
+* Preview JPEG compression quality in PDF output preview
+* Make brightness/contrast/resolution changes affect all selected sources
+* [Qt] Support multipage images through QImageReader (Qt5.9+ will support multipage TIFFs)
+* [Gtk] Fix hang when saving selection image
+* [Qt] Fix possible deadlock when rapidly switching sources
+* Updated translations
+
+gImageReader 3.2.0 (Nov 23 2016):
+ * gImageReader 3.2.0 stable
+ * Add PageUp / PageDown keyboard accelerators for browsing multipage documents
+ * See 3.1.9x changelogs for all other feature changes since previous stable
+ * Many bug fixes since 3.1.99 - special thanks to Daniel Plakhotich
+ * Full details in commit log: https://github.com/manisandro/gImageReader/commits/master
+
+gImageReader 3.1.99 (Oct 13 2016):
+ * gImageReader 3.2 release candidate
+ * General improvements:
+   - Catch critical tesseract errors which otherwise result in the application crashing
+   - Improve spelling dictionary auto-installation logic
+   - Allow choosing whether to store language files (language definitions, spelling dictionaries) in system-wide or user-local directories
+ * Plain text mode improvements:
+   - Allow recognizing user-defined regions on multiple pages
+   - Also treat \u2014 character as a hyphen
+   - Make preserve paragraphs option correctly deal with trailing whitespace
+ * hOCR editor improvements:
+   - Add "Add to dictionary" and "Ignore word" actions to spell-checking menu in hOCR editor
+   - Exclude non-word characters from spell-checking
+   - Allow merging adjacent word items
+   - Allow adjusting bounding boxes of document elements by resizing the selection in the canvas
+   - Allow removing arbitrary items from the document tree
+   - Allow defining custom graphic regions from context-menu of the respective page item
+ * PDF export improvements:
+   - Add previewing capability
+   - Take into account baseline information to better position the words in the generated PDF
+   - Add options to choose color format and compression of images written to PDF, allowing to greatly reduce the size of PDF
+   - Correctly handle paper size and DPI
+   - Improve logic for uniformizing word and line spacing
+   - Make sure correct hyphen character is used, allowing PDF applications to correctly find hyphenated words
+ * New and updated translations
+ * Various bug fixes
+ * Full details in commit log: https://github.com/manisandro/gImageReader/commits/master
+
+gImageReader 3.1.91 (May 03 2016):
+ * gImageReader 3.2 beta 2
+ * Fix crash when editing items in the hOCR editor
+ * Fix build with Ubuntu 14.04
+ * Updated czech translation
+ * Fix some string typos
+ * Full details in commit log: https://github.com/manisandro/gImageReader/commits/master
+
+gImageReader 3.1.90 (Apr 28 2016):
+ * gImageReader 3.2 beta 1
+ * Add an initial hOCR editor implementation, with possibility to save as hOCR HTML, PDF with invisible text overlay, or a PDF reconstructed from the extracted text and graphics
+ * Allow selecting and working on multiple sources at once
+ * Add a tessdata manager, to conveniently manage tesseract language definitions directly from the application
+ * Show a progress bar when recognizing, add a cancel button
+ * Modernized Gtk UI
+ * Expose script and orientation detection support
+ * Possibility to pan via middle button drag
+ * Remove the need to specify the culture code in custom language definitions, and use a built-in language-culture mapping instead to search for spelling dictionaries
+ * Various bug fixes
+ * Full details in commit log: https://github.com/manisandro/gImageReader/commits/master
+
+gImageReader 3.1.2 (Jun 30 2015):
+ * Fix incorrect behavior of "Append to current text" with multiple recognition areas
+ * Full details in commit log: https://github.com/manisandro/gImageReader/commits/master
+
+gImageReader 3.1.1 (Jun 11 2015):
+ * Fix titlebar now shown when window maximized in Gnome 3
+ * New translations: Chinese (Hong Kong), Chinese (Taiwan)
+ * Updated translations: Russian, Portoguese
+
+gImageReader 3.1 (May 1 2015):
+ * Add option to draw whitespace
+ * Allow searching and replacing only in selected portion of output text
+ * Add "preserve paragraphs" postprocessing option
+ * Allow to open files via drag and drop
+ * Improve rendering of certain PDF files with the Qt interface
+ * Fix scanning broken with certain scanners under Windows
+ * Support automatic spelling dictionary installation under Windows
+ * Allow saving scans in other formats than png
+ * Handful of bugs fixed
+ * Full details in commit log: https://github.com/manisandro/gImageReader/commits/master
+
+gImageReader 3.0.1 (Jan 4 2015):
+ * Fix a bug in the Qt interface when loading substitutions list from file
+ * Improve behaviour of strip line breaks functionality with multiple line breaks
+ * Small UI improvements
+ * Full details in commit log: https://github.com/manisandro/gImageReader/commits/master
+
+gImageReader 3.0 (Dec 12 2014):
+ * gImageReader 3.0 stable
+ * New Qt4/5 interface, as alternative to the Gtk interface
+ * Fixed scanning on Windows
+ * Memorize image settings (brightness, contrast, etc) when switching images
+ * Search forward and backward, replace all, case sensitive search
+ * Many bug fixes
+ * Translation updates
+ * Full details in commit log: https://github.com/manisandro/gImageReader/commits/master
+
+gImageReader 2.93 (Apr 30 2014):
+ * gImageReader 3.0 beta 4
+ * Add possibility to choose multiple recognition languages
+ * Add button to show/hide output pane
+ * Fix a crash when loading a scanned document
+ * Allow toggling spell checking from context menu
+ * Full details in commit log: https://github.com/manisandro/gImageReader/commits/master
+
+gImageReader 2.92 (Mar 19 2014):
+ * gImageReader 3.0 beta 3
+ * Add replacement-list feature, allowing the user to specify a list of replacements to perform on the recognized text
+ * Fix saving output resulting in empty files
+ * Fix crashes when rendering PDF files
+ * Keep line-breaks if preeded by line-break
+ * Fix localization not working on Windows
+ * Full details in commit log: https://github.com/manisandro/gImageReader/commits/master
+
+gImageReader 2.91 (Feb 20 2014):
+ * gImageReader 3.0 beta 2
+ * Improve page-layout autodetection by merging overlapping regions
+ * Use native file-chooser dialogs on Gnome/KDE/Windows
+ * Allow performing multipage-recognition with page-layout autodetection
+ * Fix broken search/replace which caused the application to crash
+ * Add Win64 packages
+ * Fix some other bugs, full details in commit log: https://github.com/manisandro/gImageReader/commits/master
+
+gImageReader 2.90 (Feb 11 2014):
+ * First beta of the grand new gImageReader:
+   - Support multiple selections (via CTRL-key). Rightclicking a selection opens a context menu which allows to:
+     - Deleted and reordered individual selections.
+     - Recognize the selected text, either to clipboard or to the output pane.
+   - Basic automatic page layout detection.
+   - The output pane now supports undo and redo.
+   - Configuration is now automatic.
+   - Proper arbitrary rotation of images.
+   - Detect deleted/renamed files.
+   - Cleaner UI.
+   - Port to Gtk+3, rewrite in C++ using the Gtkmm bindings.
+</pre>
+<h2><a name="Usage">Usage</a></h2>
+<h3><a name="Usage_Open">Opening and importing images</a></h3>
+<ul>
+    <li>Images can be opened/imported from the <i>sources pane</i>, which is activated by clicking on the top-left button in the <i>main toolbar</i>.</li>
+    <li>To open an existing image or PDF document, click on the open button in the <i>images tab</i>.</li>
+    <li>To capture a screenshot, paste image data from the clipboard, or open a recently opened file, click on the arrow next to the open button.</li>
+    <li>You can manage the list of opened images with the buttons next to the open button. Temporary files (such as screenshots and clipboard data) are automatically deleted when the program exists.</li>
+    <li>To acquire an image from a scanning device, click on the <i>acquire tab</i> in the <i>sources pane</i>.</li>
+    <li>If an existing output text/html document exists next to a source document, an icon is displayed next to that document in the source tree allowing to open the existing output directly.</li>
+    <li>The <i>Thumbnails</i> section in the lower part of the source tree will display the thumbnails of the selected documents in the source tree.</li>
+</ul>
+<h3><a name="Usage_View">Viewing and adjusting images</a></h3>
+<ul>
+    <li>Use the buttons in the <i>main toolbar</i> to zoom in and out as well as rotate the image by an arbitrary angle. Zooming can also be performed by scrolling on the image with the CTRL key pressed.</li>
+    <li>Basic image manipulation tools are provided in the <i>image controls toolbar</i>, which is activated by clicking on the <i>image controls button</i> in the <i>main toolbar</i>. The provided tools currently allow brightness and contrast adjustments as well as adjusting the image resolution (through interpolation).</li>
+    <li>Multiple images can be selected, which allowes the user to process multiple images in one go (see below).</li>
+</ul>
+<h3><a name="Usage_Recognition">Preparing for recognition</a></h3>
+<ul>
+    <li>To perform OCR on an image, the user needs to specify:
+        <ul>
+            <li>The input images (e.g. images to recognize),</li>
+            <li>The recognition mode (e.g. <i>plain text</i> vs <i>hOCR, PDF</i>)</li>
+            <li>The recognition language(s).</li>
+        </ul>
+    </li>
+    <li>The <b>input images</b> correspond to the selected entries in the <i>images tab</i> in the <i>sources pane</i>. If multiple images are selected, the program will treat the set of images as multipage document and ask the user which pages to process when recognition is started.</li>
+    <li>The <b>recognition mode</b> can be selected in the <i>OCR mode</i> combobox in the <i>main toolbar</i>:
+        <ul>
+            <li>The <i>plain text</i> mode makes the OCR engine extract only the plain text, without formatting and layout information.</li>
+            <li>The <i>hOCR, PDF</i> mode makes the OCR engine return the recognized text as a <i>hOCR</i> html document, which includes formatting and layout information for the recognized page. <i>hOCR</i> is a standard format for storing recognition results and can be used to interoperate with other application supporting this standard. gImageReader can process <i>hOCR</i> documents further to generate a PDF document for the recognition result.</li>
+        </ul>
+    </li>
+    <li>The <b>recognition language</b> can be selected from the drop-down menu of the <i>recognize button</i> in the <i>main toolbar</i>. If a spelling dictionary is installed for a tesseract language definition, it is possible to choose between available regional flavors of the language. This will only affect the language for spell-checking the recognized text. Unrecognized tesseract language definitions will appear by their filename prefix, one can however teach the program to recognize such files by defining appropriate rules in the program configuration (see below). Multiple recognition languages can be specified at once from the <i>Multilingual</i> submenu of the drop-down menu. The installed tesseract language definitions can be managed from the <i>Manage languages...</i> menu entry in the drop-down menu of the <i>recognize button</i>, see also <a href="#InstallTessdata">below</a>.</li>
+    <li>When selecting multiple documents in the source pane, the <i>Batch mode</i> option appears when pressing the recognize button. This mode processes all selected documents and writes the output next to the source file.</li>
+</ul>
+<h3><a name="Usage_RecognizeText">Recognizing and post-processing in plain text mode</a></h3>
+<ul>
+    <li>Areas to be recognized can be selected by dragging (left click + mouse move) a rectangular area around portions of the image. Multiple selections are possible by pressing the CTRL key while selecting.</li>
+    <li>Alternatively, the <i>automatic layout detection button</i>, accessible from the <i>main toolbar</i> will attempt to automatically define appropriate recognition areas, as well as adjust the rotation of the image if necessary.</li>
+    <li>Selections can be deleted and reordered via the context menu which appears when right-clicking on them. It is also possible to resize existing selections by dragging the corners of the selection rectangle.</li>
+    <li>The selected portions of the image (or the entire image, if no selections are defined) can be recognized by pressing on the <i>recognize button</i> in the <i>main toolbar</i>. Alternatively, individual areas can be recognized by right-clicking a selection. From the selection context menu, it is also possible to redirect the recognized text to the clipboard, instead of the output pane.</li>
+    <li>If multiple pages are selected for recognition, the program allows the user to choose between either recognizing the full resp. manually selected area for each individual page, or performing a page-layout analysis on each page to automatically detect appropriate recognition areas.</li>
+    <li>Recognized text will appear in the <i>output pane</i> (unless the text was redirected to the clipboard), which is shown automatically as soon as some text was recognized.</li>
+    <li>If a spelling dictionary for the recognition language is available, automatic spell-checking will be enabled for the outputted text. The used spelling dictionary can be changed either from the language menu next to the <i>recognize button</i>, or from the menu which appears when right-clicking in the text area.</li>
+    <li>When additional text is recognized, it will either get appended, inserted at cursor position, or replace the previous content of the text buffer, depending on the mode selected in the <i>append mode menu</i>, which can be found in the <i>output pane toolbar</i>.</li>
+    <li>Other post-processing tools include stripping line breaks, collapsing spaces and more (available from the second button in the <i>output pane toolbar</i>), as well as searching and replacing text. A list of search and replace rules can be defined by clicking on the <i>Find and replace</i> button in the <i>output pane toolbar</i> and then clicking on the <i>Substitutions</i> button.</li>
+    <li>Changes to the text buffer can be undone and redone by clicking on the appropriate buttons in the <i>output pane toolbar</i>.</li>
+    <li>The contents of the text buffer can be saved to a file by clicking on the <i>save button</i> in the <i>output pane toolbar</i>.</li>
+</ul>
+<h3><a name="Usage_RecognizeText">Recognizing and post-processing in hOCR, PDF mode</a></h3>
+<ul>
+    <li>In hOCR mode, always the entire page of the selected source(s) is recognized.</li>
+    <li>The recognition result is presented in the <i>output pane</i> as a tree-structure, divided in pages, paragraphs, textlines, words and graphics.</li>
+    <li>When an entry in the tree-structure is selected, the corresponding area is highlighted in the image. Additionally, formatting and layout properties of the entry are shown in the <i>Properties</i> tab below the document tree. The raw hOCR source is visible in the <i>Source</i> tab below the document tree.</li>
+    <li>The word text in the document tree can be edited by double-clicking the respective word entry. If a word is mis-spelled, it will be rendered red. Right-clicking a word in the document tree will show a menu with spelling suggestions.</li>
+    <li>Properties for a selected entry can be modified by double clicking the desired property value in the <i>Properties</i> tab. Interesting actions for text entries are tweaking the bounding area, changing the language and modifying the font size. The language property also definies the spelling language used to check the respective word. The bounding area can also be edited by resizing the selection rectangle in the canvas.</li>
+    <li>Adjacent word items can be merged by rightclicking the respective selected items.</li>
+    <li>Arbitrary items can be removed from the document via right-click on the respective item.</li>
+    <li>New graphic areas can be defined by selecting the <i>Add graphic region</i> entry of the context menu of the respective page item and drawing a rectangle on the canvas.</li>
+    <li>The document tree can be saved as a <i>hOCR HTML document</i> via the <i>Save as hOCR text</i> button in the <i>output pane toolbar</i>. Existing documents can be imported via the <i>Open hOCR file</i> button in the <i>output pane toolbar</i>.</li>
+    <li>PDF files can be generated from the <i>PDF export menu</i> in the <i>output pane toolbar</i>. Two modes are available:
+        <ul>
+            <li><i>PDF</i> will generate a reconstructed PDF the same layout and graphics/pictures as the source document.</li>
+            <li><i>PDF with invisible text overlay</i> will generate a PDF with the unmodified source image as background and invisible (but selectable) text overlaid above the respective source text in the image. This export mode is useful for generating a document which is visually identical to the input, but with searchable and selectable text.</li>
+        </ul>
+    </li>
+    <li>When exporting to PDF, the user is prompted for the font family to use, whether to honour the font sizes detected by the OCR engine, and whether to attempt to homogenize the text line spacing. Also, the user can select the color format, resolution and compression method to use for images in the PDF document to control the size of the generated output.</li>
+    <li>Besides PDF, the hOCR document can also be exported to plain text and ODT.</li>
+    <li>The <i>HOCR Batch Export</i> button in the main toolbar allows batch-exporting a collection of hOCR HTML files to PDF/ODT/Text. All hOCR HTML files below the selected source folder are processed and corresponding PDF/ODT/Text files are written next to the HTML files. The <i>Group outputs of N lowest levels</i> option allows specifing that the HTML files of the N lowest hierarchy levels of the source tree are stored into a single exported PDF/ODT/Text file N folder levels above the lowest level.</li>
+</ul>
+<h3><a name="Usage_Options">Program options</a></h3>
+<ul>
+    <li>The program options can be accessed from the <i>application menu</i>, which opens when clicking the right-most button of the <i>main toolbar</i>. When running the application within the Gnome 3 desktop environment, the application menu is part of the top bar of the desktop shell.</li>
+    <li>Options allow setting the font of the output pane, as well as determining whether the application will notify about missing spelling dictionaries and new program versions.</li>
+    <li>When running the Gtk+ interface, the options also allow setting the orientation of the <i>output pane</i> (if vertical, it will occupy the right portion of the application, if horizontal, it will occupy the lower portion). When running the Qt interface, the position of the output pane can be freely moved around by dragging on the title bar of the output pane.</li>
+    <li>The <i>language data location</i> setting allows to control whether tesseract language definitions and spelling dictionaries are saved in system-wide (i.e. <tt>%ProgramFiles%</tt> under Windows or typically below <tt>/usr</tt> on Linux) or user-local (i.e. below the current user's home directory) directories. This is useful if the user does not have writing privileges in system-wide locations.</li>
+    <li>Additionally, one can define new rules to match tesseract language definitions to a language (unfortunately, the tesseract language definitions do not include this information). The list of predefined rules can be seen in the <i>Predefined language definitions</i> section. Additional definitions can be added clicking on the <i>Add</i> button below. The rules for a language definition, which consists of three fields, are as follows:
+        <ul>
+            <li><b>Filename prefix</b>: The filename of tesseract language data files is of the format <i>&lt;prefix&gt;.traineddata</i>, i.e. for English, the file is called <i>eng.traineddata</i> and the prefix is <i>eng</i>.</li>
+            <li><b>ISO code</b>: This is the <a href="http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1 language code</a> (i.e. <i>en</i>), optionally combined by an underscore with the <a href="http://en.wikipedia.org/wiki/ISO_3166-2">ISO 3166-2 country code</a> (i.e. <i>en_US</i>). This information is necessary to match spelling dictionaries to the language. The choice of the actual country code is not strictly relevant, but it is necessary for the automatic installation of spelling dictionaries to find a relevant package of dictionaries. This code can also be made up if no appropriate choices exist, the only result being that no relevant spelling-dictionaries will be matched with the language.</li>
+            <li><b>Native name</b>: The native name of the language simply determines the label of the entry for the language in the <i>language menu</i>.</li>
+        </ul>
+    </li>
+</ul>
+<h2><a name="InstallTessdata">Installation of tesseract language definitions</a></h2>
+<ul>
+    <li>The <i>Tessdata manager</i>, available from the drop-down menu of the <i>recognize button</i> in the <i>main toolbar</i> allows the user to manage the available recognition languages.</li>
+    <li>To install the languages manually:
+        <ul>
+            <li>On <b>Linux</b>, it's sufficient to install the package corresponding to the language definition one wants to install via the package management application (the packages may be called something like <i>tesseract-langpack-&lt;lang&gt;</i>).</li>
+            <li>On <b>Windows</b>, first, in the gImageReader about dialog, check which version of tesseract is used.
+            <ul>
+                <li>If using tesseract 4.x, go to <a href="https://github.com/tesseract-ocr/tessdata_fast">https://github.com/tesseract-ocr/tessdata_fast</a>.</li>
+                <li>If using tesseract 3.x or older, go to <a href="https://github.com/tesseract-ocr/tessdata">https://github.com/tesseract-ocr/tessdata</a>.</li>
+            </ul>
+            Then, in the branch selection button, under tags, select the version which is <b>less or equal</b> the tesseract version in use. Then download the desired language definitions (*.traineddata along with any supplementary files which certain languages need) and save them to <tt>Start&rarr;All Programs&rarr;gImageReader&rarr;Tesseract language definitions</tt>.</li>
+        </ul>
+    </li>
+    <li>To re-detect the available languages, one can restart the program, or select <i>Redetect Languages</i> from the <i>application menu</i>.</li>
+</ul>
+<h2><a name="InstallSpelling">Installation of spelling dictionaries</a></h2>
+<ul>
+    <li>On <b>Linux</b>, if your distribution supports PackageKit, the program will offer to automatically install missing dictionaries when necessary. If automatic installation does not work for some reason, you can install the spelling dictionaries from the package management application (the packages may be called something like <i>hunspell-&lt;lang&gt;</i>).</li>
+    <li>On <b>Windows</b>, the program will attempt to automatically download the desired spelling dictionary from <a href="https://cgit.freedesktop.org/libreoffice/dictionaries/tree">http://cgit.freedesktop.org/libreoffice/dictionaries/tree</a>. Dictionaries can also be installed manually: for a desired language (i.e. <tt>it_IT</tt>), download the <b>*.dic and *.aff</b> files and place them in <tt>Start&rarr;All Programs&rarr;gImageReader&rarr;Spelling dictionaries</tt>.</li>
+</ul>
+<h2><a name="Contributing">Contributing</a></h2>
+<p>
+For suggestions and contributions of any kind, please file tickets and/or pull-requests on the <a href="https://github.com/manisandro/gImageReader">GitHub project page</a>, or contact me at <a href="mailto:manisandro@gmail.com">manisandro@gmail.com</a>. I'd especially appreciate translations - here are the main steps for creating a translation:
+</p>
+<ol>
+    <li>Download the <a href="https://github.com/manisandro/gImageReader/archive/master.zip">latest source archive</a>.</li>
+    <li>Enter the <tt>po</tt> folder.</li>
+    <li>To create a new translation, copy the <tt>gimagereader.pot</tt> file to <tt>&lt;language&gt;.po</tt> (i.e. <tt>de.po</tt> for German). To edit an existing translation, simply pick the corresponding file.</li>
+    <li>Translate the strings in <tt>&lt;language&gt;.po</tt>.</li>
+    <li>Send the <b>po</b> file to <a href="mailto:manisandro@gmail.com">manisandro@gmail.com</a>. Thanks!</li>
+</ol>
+<h2><a name="Support">Debugging and support</a></h2>
+<p>
+If you find an issue or have a suggestion, please file a ticket to the <a href="https://github.com/manisandro/gImageReader/issues">gImageReader issue tracker</a>, or contact me directly at <a
+ href="mailto:manisandro@gmail.com">manisandro@gmail.com</a>. Be sure to also consult the <a href="https://github.com/manisandro/gImageReader/wiki/FAQ">FAQ</a>. If you are experiencing crashes or hangs, please also try to include the following information in the ticket/email:
+</p>
+<ul>
+<li>If the crash handler appears, include the backtrace which is shown there. To make sure that the backtrace is complete, if you are running the application under Linux, make sure that the <tt>gdb</tt> debugger as well as the debugging symbols are installed if your distribution provides them. The package containing the debugging symbols is usually called <b>&lt;packagename&gt;-debuginfo</b> or <b>&lt;packagename&gt;-dbg</b>. If you are running the application under Windows, some debugging symbols are installed by default.</li>
+<li>If you are running under Windows, include the <tt>%ProgramFiles%\gImageReader\gimagereader.log</tt> and <tt>%ProgramFiles%\gImageReader\twain.log</tt> log files.</li>
+<li>If you are running under Linux, run the application from a terminal and include any output which appears on the terminal.</li>
+<li>Try to describe as best as you can what you were doing and whether the problem is reproducible.</li>
+</ul>
+<hr />
+<p>Copyright &copy;2009-2022 Sandro Mani, revision: Frid, Jan 28 2022</p>
+</body>
+
+</html>
