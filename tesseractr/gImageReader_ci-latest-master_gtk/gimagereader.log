@@ -1,13 +1,7 @@
 
-** (process:11084): CRITICAL **: 16:31:09.442: Class::register_derived_type(): base_query.type_name is NULL.
+** (process:11184): CRITICAL **: 16:36:43.907: Class::register_derived_type(): base_query.type_name is NULL.
 
-(gimagereader-gtk.exe:11084): GLib-GIO-WARNING **: 16:31:09.537: win32 session dbus binary not found
+(gimagereader-gtk.exe:11184): GLib-GIO-WARNING **: 16:36:44.001: win32 session dbus binary not found
 
-(gimagereader-gtk.exe:11084): Gtk-WARNING **: 16:31:10.740: Could not load a pixbuf from /org/gtk/libgtk/theme/Adwaita/assets/check-symbolic.svg.
+(gimagereader-gtk.exe:11184): Gtk-WARNING **: 16:36:45.241: Could not load a pixbuf from /org/gtk/libgtk/theme/Adwaita/assets/check-symbolic.svg.
 This may indicate that pixbuf loaders or the mime database could not be found.
-
-(gimagereader-gtk.exe:11084): Gtk-CRITICAL **: 16:31:23.695: gtk_button_box_set_child_secondary: assertion 'gtk_widget_get_parent (child) == GTK_WIDGET (widget)' failed
-
-(gimagereader-gtk.exe:11084): Gtk-CRITICAL **: 16:31:23.696: gtk_button_box_set_child_non_homogeneous: assertion 'gtk_widget_get_parent (child) == GTK_WIDGET (widget)' failed
-
-(gimagereader-gtk.exe:11084): Gtk-CRITICAL **: 16:31:23.696: gtk_box_pack: assertion '_gtk_widget_get_parent (child) == NULL' failed
