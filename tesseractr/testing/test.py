@@ -28,4 +28,6 @@ if __name__ == "__main__":
 
 
 
-# update tessdata file to updated[?] version 
+# update tessdata file to updated[?] version https://github.com/tesseract-ocr/tessdata/blob/main/hin.traineddata
+# older version is very inaccurate [legacy] 
+# https://github.com/tesseract-ocr/tessdata/commit/8e7c7ae5fa030ff24c36bd5c33be39fed1997efd 
