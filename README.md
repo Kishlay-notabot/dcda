@@ -20,7 +20,7 @@ Average confidence of Legacy model is : 79.5
 Average confidence of 4.0/4.1 model is : 89.83 
 
 # Credits: 
-https://github.com/subhrajyotidasgupta/DevanagariHTR  
+[Subhrajyoti Dasgupta](https://github.com/subhrajyotidasgupta/DevanagariHTR)
 Prashnna Kumar Gyawali[Stanford University]  
 Ashok Kumar Pant [Tribhuvan University]  
 [Research Paper](https://www.researchgate.net/publication/304406868_Deep_learning_based_large_scale_handwritten_Devanagari_character_recognition)
