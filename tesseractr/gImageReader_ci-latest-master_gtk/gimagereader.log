@@ -1,17 +1,14 @@
 
-** (process:11184): CRITICAL **: 16:36:43.907: Class::register_derived_type(): base_query.type_name is NULL.
+** (process:2448): CRITICAL **: 18:40:39.105: Class::register_derived_type(): base_query.type_name is NULL.
 
-(gimagereader-gtk.exe:11184): GLib-GIO-WARNING **: 16:36:44.001: win32 session dbus binary not found
+(gimagereader-gtk.exe:2448): GLib-GIO-WARNING **: 18:40:39.183: win32 session dbus binary not found
 
-(gimagereader-gtk.exe:11184): Gtk-WARNING **: 16:36:45.241: Could not load a pixbuf from /org/gtk/libgtk/theme/Adwaita/assets/check-symbolic.svg.
+(gimagereader-gtk.exe:2448): Gtk-WARNING **: 18:40:40.273: Could not load a pixbuf from /org/gtk/libgtk/theme/Adwaita/assets/check-symbolic.svg.
 This may indicate that pixbuf loaders or the mime database could not be found.
-Error: LSTM requested, but not present!! Loading tesseract.
-Detected 864 diacritics
-Error: LSTM requested, but not present!! Loading tesseract.
-Detected 204 diacritics
+Detected 339 diacritics
 
-(gimagereader-gtk.exe:11184): Gtk-CRITICAL **: 16:51:12.813: gtk_button_box_set_child_secondary: assertion 'gtk_widget_get_parent (child) == GTK_WIDGET (widget)' failed
+(gimagereader-gtk.exe:2448): Gtk-CRITICAL **: 18:42:45.442: gtk_button_box_set_child_secondary: assertion 'gtk_widget_get_parent (child) == GTK_WIDGET (widget)' failed
 
-(gimagereader-gtk.exe:11184): Gtk-CRITICAL **: 16:51:12.813: gtk_button_box_set_child_non_homogeneous: assertion 'gtk_widget_get_parent (child) == GTK_WIDGET (widget)' failed
+(gimagereader-gtk.exe:2448): Gtk-CRITICAL **: 18:42:45.442: gtk_button_box_set_child_non_homogeneous: assertion 'gtk_widget_get_parent (child) == GTK_WIDGET (widget)' failed
 
-(gimagereader-gtk.exe:11184): Gtk-CRITICAL **: 16:51:12.813: gtk_box_pack: assertion '_gtk_widget_get_parent (child) == NULL' failed
+(gimagereader-gtk.exe:2448): Gtk-CRITICAL **: 18:42:45.442: gtk_box_pack: assertion '_gtk_widget_get_parent (child) == NULL' failed

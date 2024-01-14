@@ -10,8 +10,7 @@ def process_images(input_folder, output_folder):
         image = cv2.imread(input_path)
         if image is not None:
             gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            normalized_image = gray_image / 255.0
-            cv2.imwrite(output_path, normalized_image)
+            cv2.imwrite(output_path, gray_image)
             print(f"Processed image saved: {output_path}")
         else:
             print(f"Error reading image: {input_path}")
