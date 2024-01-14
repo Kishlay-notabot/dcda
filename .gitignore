@@ -1,2 +1,5 @@
-C:\Users\kishl\Downloads\venv\venvtest1\tesseractr\gImageReader_ci-latest-master_gtk\gimagereader.log
-C:\Users\kishl\Downloads\venv\venvtest1\tesseractr\gImageReader_ci-latest-master_gtk\twain.log
+# .gitignore
+
+# Ignore gimagereader logs
+venv/venvtest1/tesseractr/gImageReader_ci-latest-master_gtk/gimagereader.log
+venv/venvtest1/tesseractr/gImageReader_ci-latest-master_gtk/twain.log
