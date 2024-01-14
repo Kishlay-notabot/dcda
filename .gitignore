@@ -1,5 +1,5 @@
 # .gitignore
 
 # Ignore gimagereader logs
-venv/venvtest1/tesseractr/gImageReader_ci-latest-master_gtk/gimagereader.log
-venv/venvtest1/tesseractr/gImageReader_ci-latest-master_gtk/twain.log
+tesseractr/gImageReader_ci-latest-master_gtk/gimagereader.log
+tesseractr/gImageReader_ci-latest-master_gtk/twain.log
