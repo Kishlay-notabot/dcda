@@ -1,0 +1,7 @@
+
+** (process:7908): CRITICAL **: 21:43:18.595: Class::register_derived_type(): base_query.type_name is NULL.
+
+(gimagereader-gtk.exe:7908): GLib-GIO-WARNING **: 21:43:18.670: win32 session dbus binary not found
+
+(gimagereader-gtk.exe:7908): Gtk-WARNING **: 21:43:19.854: Could not load a pixbuf from /org/gtk/libgtk/theme/Adwaita/assets/check-symbolic.svg.
+This may indicate that pixbuf loaders or the mime database could not be found.
