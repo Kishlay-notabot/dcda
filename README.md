@@ -1,4 +1,5 @@
-# dcda
+# dcda  
+Ongoing research project, more details will be added soon  
 ---
 ## Outcomings
 Legacy version of tessdata is very inaccurate
