@@ -1,4 +1,6 @@
 # dcda  
+
+Devanagari Character Dataset Automation for ML models
 Ongoing research project, more details will be added soon  
 
   
