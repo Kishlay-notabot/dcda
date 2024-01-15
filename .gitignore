@@ -1,5 +1,2 @@
-# .gitignore
-
-# Ignore gimagereader logs
-tesseractr/gImageReader_ci-latest-master_gtk/gimagereader.log
-tesseractr/gImageReader_ci-latest-master_gtk/twain.log
+/tesseractr/gImageReader_ci-latest-master_gtk/gimagereader.log
+/tesseractr/gImageReader_ci-latest-master_gtk/twain.log
