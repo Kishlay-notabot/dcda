@@ -24,6 +24,8 @@ Legacy version of tessdata is very inaccurate
 Average confidence of Legacy model is : 79.5  
 Average confidence of 4.0/4.1 model is : 89.83 
 
+
+Now using tesseract.js in react-dev repo
 # Credits: 
 [Subhrajyoti Dasgupta](https://github.com/subhrajyotidasgupta/DevanagariHTR)
 Prashnna Kumar Gyawali[Stanford University]  
