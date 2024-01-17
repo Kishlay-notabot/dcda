@@ -5,8 +5,13 @@ Ongoing research project, more details will be added soon
 
   
 ---
-## Outcomings
-Legacy version of tessdata is very inaccurate
+## Outcomings  
+
+Legacy version of tessdata is very inaccurate  
+  
+### Issue faced  
+[#874](https://github.com/naptha/tesseract.js/issues/874)
+
     
 ### Comparison of the confidence values between both versions:
 
