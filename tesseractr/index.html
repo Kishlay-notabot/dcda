@@ -32,13 +32,12 @@
           selectedImg,
           'hin',
           {
-            logger: progressUpdate, // Utilize the progressUpdate function for logging
+            logger: (e) => console.log(e),
             tessedit_pageseg_mode: 'SINGLE_CHAR',
           }
         )
           .then((out) => {
             console.log(out + '\n' + out.data.confidence);
-            displayImageWithBoundingBox(selectedImg, out.data.words);
             setTextResult(out.data.text);
           })
           .catch((error) => console.error('Error during OCR:', error));
@@ -48,7 +47,15 @@
         document.getElementById('boxText').innerText = text;
       }
 
-      function displayImageWithBoundingBox(selectedImg, words) {
+      function handleChange(e) {
+        const selectedImg = e.target.files[0];
+        if (selectedImg) {
+          displayImage(selectedImg);
+          performOCR(selectedImg);
+        }
+      }
+
+      function displayImage(selectedImg) {
         const imgBox = document.getElementById('boxImg');
         imgBox.innerHTML = '';
 
@@ -56,33 +63,6 @@
         img.src = URL.createObjectURL(selectedImg);
         img.alt = 'thumb';
         imgBox.appendChild(img);
-
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        imgBox.appendChild(canvas);
-
-        const ctx = canvas.getContext('2d');
-
-        words.forEach(function(w){
-          var b = w.bbox;
-
-          ctx.lineWidth = 2;
-          ctx.strokeStyle = 'red';
-          ctx.strokeRect(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0);
-          ctx.beginPath();
-          ctx.moveTo(w.baseline.x0, w.baseline.y0);
-          ctx.lineTo(w.baseline.x1, w.baseline.y1);
-          ctx.strokeStyle = 'green';
-          ctx.stroke();
-        });
-      }
-
-      function handleChange(e) {
-        const selectedImg = e.target.files[0];
-        if (selectedImg) {
-          performOCR(selectedImg);
-        }
       }
 
       document.getElementById('upload').addEventListener('change', handleChange);
