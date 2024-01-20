@@ -19,6 +19,10 @@
 <body>
   <div class="App">
     <span>Hi</span>
+    
+    versions: node app [app.js]
+    browser only this file [offline] [node]
+    online html custom index.html in dcda
     <p>
       <label for="upload">Upload</label>
       <input type="file" id="upload" accept="image/*" />
@@ -30,7 +34,7 @@
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
-          'hin',
+          'eng',
           {
             logger: (e) => console.log(e),
             tessedit_pageseg_mode: 'SINGLE_CHAR',
