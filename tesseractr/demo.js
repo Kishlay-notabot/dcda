@@ -4,12 +4,6 @@
 
 
 
-
-
-
-
-
-
 var input = document.getElementById('input')
 var input_overlay = document.getElementById('input-overlay')
 var ioctx = input_overlay.getContext('2d')
@@ -26,7 +20,7 @@ var options = [].slice.call(document.querySelectorAll('.option'))
 var language = 'eng'
 var demoStarted = false
 var lang_demo_images = {
-	eng: 'img/eng_bw.png',
+	eng: 'old_files/5.png',
 	chi_sim: 'img/chi_sim.png',
 	rus: 'img/rus.png'
 }
