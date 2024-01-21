@@ -1,4 +1,7 @@
-// analyse below code 
+// analysis by me till now
+
+// 1. uses canvas api 
+// variables: ioctx  
 
 
 
