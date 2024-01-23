@@ -31,10 +31,12 @@
     <div class="box-p" id="boxText">result text will appear here</div>
 
     <script>
+      var boundingBoxData = [];
+
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
-          'hin',
+          'eng',
           {
             logger: (e) => console.log(e),
             tessedit_pageseg_mode: 'SINGLE_CHAR',
@@ -43,15 +45,19 @@
           .then((out) => {
             console.log(out + '\n' + out.data.confidence);
             setTextResult(out.data.text);
+            saveBoundingBoxes(out.data.words);
           })
-          .catch((error) => console.error('Error during OCR:', error));
+          .catch((error) => console.error('Error faced!:', error));
+      }
+      function saveBoundingBoxes(words) {
+      boundingBoxData = words.map(word => word.bbox);
       }
 
       function setTextResult(text) {
         document.getElementById('boxText').innerText = text;
       }
 
-      function handleChange(e) {
+      function handleChange(e) {  
         const selectedImg = e.target.files[0];
         if (selectedImg) {
           displayImage(selectedImg);
@@ -74,3 +80,4 @@
   </div>
 </body>
 </html>
+
