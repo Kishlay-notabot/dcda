@@ -29,6 +29,9 @@
     </p>
     <div class="box-img" id="boxImg"></div>
     <div class="box-p" id="boxText">result text will appear here</div>
+
+<br> <br>
+    BBOX INFO:
     <div id="boundingBoxInfo"></div>
     <script>
       var boundingBoxData = [];
@@ -36,7 +39,7 @@
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
-          'eng',
+          'hin',
           {
             logger: (e) => console.log(e),
             tessedit_pageseg_mode: 'SINGLE_CHAR',
