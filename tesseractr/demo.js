@@ -4,9 +4,6 @@
 // variables: ioctx  
 
 
-
-
-
 var input = document.getElementById('input')
 var input_overlay = document.getElementById('input-overlay')
 var ioctx = input_overlay.getContext('2d')
