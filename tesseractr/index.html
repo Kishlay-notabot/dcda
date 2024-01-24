@@ -31,7 +31,13 @@
     <div class="box-img" id="boxImg"></div>
     <div class="box-p" id="boxText">result text will appear here</div>
 
+
+    <br> 
+    V1+2
+    <div class="box-p" id="bboxInfo"></div>
+
     <script>
+       var boundingBoxData = [];
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
@@ -44,6 +50,7 @@
           .then((out) => {
             console.log(out, 'confidence:' ,out.data.confidence);
             setTextResult(out.data.text);
+            saveBoundingBoxes(out.data.words);
           })
           .catch((error) => console.error('Error during OCR:', error));
       }
@@ -69,6 +76,23 @@
         img.alt = 'thumb';
         imgBox.appendChild(img);
       }
+      // bbox 
+function saveBoundingBoxes(words) {
+            boundingBoxData = words.map(word => word.bbox);
+            updateBoundingBoxDisplay();
+}
+            function updateBoundingBoxDisplay() {
+            var boundingBoxInfoElement = document.getElementById('bboxInfo');
+            boundingBoxInfoElement.innerHTML = 'Bounding Box Data:<br>';
+
+            boundingBoxData.forEach(function(bbox, index) {
+                var boxInfo = document.createElement('div');
+                boxInfo.innerHTML = `Word ${index + 1}: Bounding Box - x0=${bbox.x0}, y0=${bbox.y0}, x1=${bbox.x1}, y1=${bbox.y1}`;
+                boundingBoxInfoElement.appendChild(boxInfo);
+            });
+        }
+
+// bbox end 
 
       document.getElementById('upload').addEventListener('change', handleChange);
     </script>
