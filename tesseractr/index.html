@@ -50,7 +50,7 @@
           }
         )
           .then((out) => {
-            console.log(out?.data + "confidence:" + out.data.confidence);
+            console.log(out ,"confidence:" + out.data.confidence);
             setTextResult(out.data.text);
             saveBoundingBoxes(out.data.words);
           })
