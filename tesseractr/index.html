@@ -2,108 +2,92 @@
 <html lang="en">
 <head>
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OCR App</title>
-  <style>
-    .box-img img {
-      max-width: 100%;
-      max-height: 300px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR App</title>
+    <style>
+        .box-img img {
+            max-width: 100%;
+            max-height: 300px;
+        }
 
-    .box-p {
-      margin-top: 10px;
-    }
-  </style>
+        .box-p {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-  <div class="App">
+<div class="App">
     <span>Hi</span>
-    
-    versions: node app [app.js] eng hin jpn [can be added with react] 
-    browser only this file [offline] [node is the dependency]
-    online html custom index.html in dcda[this file [but uses cdn link]]
 
-
-
-    html ver 1
     <p>
-      <label for="upload">Upload</label>
-      <input type="file" id="upload" accept="image/*" />
+        <label for="upload">Upload</label>
+        <input type="file" id="upload" accept="image/*" />
     </p>
     <div class="box-img" id="boxImg"></div>
-    <div class="box-p" id="boxText">result text will appear here</div>
+    <div class="box-p" id="boxText">result text will appear here
+      V2.O
+    </div>
 
-<br> <br>
-    BBOX INFO:
-    <div id="boundingBoxInfo"></div>
     <script>
-      var boundingBoxData = [];
+        var boundingBoxData = [];
 
-      function performOCR(selectedImg) {
-        Tesseract.recognize(
-          selectedImg,
-          'hin',
-          {
-            logger: (e) => console.log(e),
-            tessedit_pageseg_mode: 'SINGLE_CHAR',
-          }
-        )
-          .then((out) => {
-            console.log(out ,"confidence:" + out.data.confidence);
-            setTextResult(out.data.text);
-            saveBoundingBoxes(out.data.words);
-          })
-          .catch((error) => console.error('Error faced!:', error));
-      }
-
-
-
-
-      function saveBoundingBoxes(words) {
-      boundingBoxData = words.map(word => word.bbox);
-      }
-
-    function updateBoundingBoxDisplay() {
-  var boundingBoxInfoElement = document.getElementById('boundingBoxInfo');
-
-  boundingBoxInfoElement.innerHTML = '';
-
-  boundingBoxData.forEach(function(bbox, index) {
-    var boxInfo = document.createElement('div');
-    boxInfo.innerHTML = `Bounding Box ${index + 1}: x0=${bbox.x0}, y0=${bbox.y0}, x1=${bbox.x1}, y1=${bbox.y1}`;
-    boundingBoxInfoElement.appendChild(boxInfo);
-  });
-}
-
-
-
-
-      function setTextResult(text) {
-        document.getElementById('boxText').innerText = text;
-      }
-
-      function handleChange(e) {  
-        const selectedImg = e.target.files[0];
-        if (selectedImg) {
-          displayImage(selectedImg);
-          performOCR(selectedImg);
+        function performOCR(selectedImg) {
+            Tesseract.recognize(
+                selectedImg,
+                'hin',
+                {
+                    logger: (e) => console.log(e),
+                    tessedit_pageseg_mode: 'SINGLE_CHAR',
+                }
+            )
+                .then((out) => {
+                    setTextResult(out.data.text);
+                    saveBoundingBoxes(out.data.words);
+                })
+                .catch((error) => console.error('Error:', error));
         }
-      }
 
-      function displayImage(selectedImg) {
-        const imgBox = document.getElementById('boxImg');
-        imgBox.innerHTML = '';
+        function saveBoundingBoxes(words) {
+            boundingBoxData = words.map(word => word.bbox);
+            updateBoundingBoxDisplay();
+        }
 
-        const img = document.createElement('img');
-        img.src = URL.createObjectURL(selectedImg);
-        img.alt = 'thumb';
-        imgBox.appendChild(img);
-      }
+        function setTextResult(text) {
+            document.getElementById('boxText').innerText = text;
+        }
 
-      document.getElementById('upload').addEventListener('change', handleChange);
+        function handleChange(e) {
+            const selectedImg = e.target.files[0];
+            if (selectedImg) {
+                displayImage(selectedImg);
+                performOCR(selectedImg);
+            }
+        }
+
+        function displayImage(selectedImg) {
+            const imgBox = document.getElementById('boxImg');
+            imgBox.innerHTML = '';
+
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(selectedImg);
+            img.alt = 'thumb';
+            imgBox.appendChild(img);
+        }
+
+        function updateBoundingBoxDisplay() {
+            var boundingBoxInfoElement = document.getElementById('boxText');
+            boundingBoxInfoElement.innerHTML = '';
+
+            boundingBoxData.forEach(function(bbox, index) {
+                var boxInfo = document.createElement('div');
+                boxInfo.innerHTML = `Word ${index + 1}: Bounding Box - x0=${bbox.x0}, y0=${bbox.y0}, x1=${bbox.x1}, y1=${bbox.y1}`;
+                boundingBoxInfoElement.appendChild(boxInfo);
+            });
+        }
+
+        document.getElementById('upload').addEventListener('change', handleChange);
     </script>
-  </div>
+</div>
 </body>
 </html>
-
