@@ -62,6 +62,7 @@
 
       function saveBoundingBoxes(words) {
       boundingBoxData = words.map(word => word.bbox);
+      JSON.stringify(boundingBoxData)
       }
 
     function updateBoundingBoxDisplay() {
