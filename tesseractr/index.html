@@ -44,7 +44,7 @@
           'hin',
           {
             logger: (e) => console.log(e),
-            tessedit_pageseg_mode: 'PSM_SINGLE_WORD',
+            tessedit_pageseg_mode: 'SINGLE_CHAR',
           }
         )
           .then((out) => {
@@ -93,6 +93,7 @@ function saveBoundingBoxes(words) {
         }
 
 // bbox end 
+
 
       document.getElementById('upload').addEventListener('change', handleChange);
     </script>
