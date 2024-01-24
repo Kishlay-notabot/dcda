@@ -11,6 +11,7 @@ Legacy version of tessdata is very inaccurate
   
 ### Issue faced  
 [#874](https://github.com/naptha/tesseract.js/issues/874)
+[#877](https://github.com/naptha/tesseract.js/issues/877)
 
     
 ### Comparison of the confidence values between both versions:
