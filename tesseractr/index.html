@@ -26,7 +26,7 @@
 
 
 
-    html ver 1
+    html ver 1.1
     <p>
       <label for="upload">Upload</label>
       <input type="file" id="upload" accept="image/*" />
@@ -63,6 +63,7 @@
       function saveBoundingBoxes(words) {
       boundingBoxData = words.map(word => word.bbox);
       JSON.stringify(boundingBoxData)
+      return(boundingBoxData)
       }
 
     function updateBoundingBoxDisplay() {
