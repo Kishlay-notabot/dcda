@@ -33,11 +33,11 @@
 
 
     <br> 
-    V1+2
+    V1+2+1+1 [confidence number added on screen]
     <div class="box-p" id="bboxInfo"></div>
 
     <script>
-      var boundingBoxData = [];
+      var symbolData = [];
 
       function performOCR(selectedImg) {
         Tesseract.recognize(
@@ -51,7 +51,7 @@
           .then((out) => {
             console.log(out, 'confidence:', out.data.confidence);
             setTextResult(out.data.text);
-            saveSymbolBoundingBoxes(out.data.symbols);
+            saveSymbolData(out.data.symbols);
           })
           .catch((error) => console.error('Error during OCR:', error));
       }
@@ -78,23 +78,23 @@
         imgBox.appendChild(img);
       }
 
-      // Bounding Box functions for Symbols
-      function saveSymbolBoundingBoxes(symbols) {
-        boundingBoxData = symbols.map(symbol => symbol.bbox);
-        updateBoundingBoxDisplay();
+      // Symbol data functions
+      function saveSymbolData(symbols) {
+        symbolData = symbols;
+        updateSymbolDisplay();
       }
 
-      function updateBoundingBoxDisplay() {
-        var boundingBoxInfoElement = document.getElementById('bboxInfo');
-        boundingBoxInfoElement.innerHTML = 'Bounding Box Data for Symbols:<br>';
+      function updateSymbolDisplay() {
+        var symbolInfoElement = document.getElementById('bboxInfo');
+        symbolInfoElement.innerHTML = 'Symbol Data:<br>';
 
-        boundingBoxData.forEach(function (bbox, index) {
-          var boxInfo = document.createElement('div');
-          boxInfo.innerHTML = `Symbol ${index + 1}: Bounding Box - x0=${bbox.x0}, y0=${bbox.y0}, x1=${bbox.x1}, y1=${bbox.y1}`;
-          boundingBoxInfoElement.appendChild(boxInfo);
+        symbolData.forEach(function (symbol, index) {
+          var symbolInfo = document.createElement('div');
+          symbolInfo.innerHTML = `Symbol ${index + 1}: Text - ${symbol.text}, Confidence - ${symbol.confidence.toFixed(2)}, Bounding Box - x0=${symbol.bbox.x0}, y0=${symbol.bbox.y0}, x1=${symbol.bbox.x1}, y1=${symbol.bbox.y1}`;
+          symbolInfoElement.appendChild(symbolInfo);
         });
       }
-      // End Bounding Box functions
+      // End Symbol data functions
 
       document.getElementById('upload').addEventListener('change', handleChange);
     </script>
