@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OCR App</title>
@@ -37,18 +37,19 @@
     <div class="box-p" id="bboxInfo"></div>
 
     <script>
-       var boundingBoxData = [];
+      var boundingBoxData = [];
+
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
           'hin',
           {
             logger: (e) => console.log(e),
-            tessedit_pageseg_mode: 'SINGLE_CHAR',
+            psm: 6, // PSM 6 corresponds to "Assume a single uniform block of text"
           }
         )
           .then((out) => {
-            console.log(out, 'confidence:' ,out.data.confidence);
+            console.log(out, 'confidence:', out.data.confidence);
             setTextResult(out.data.text);
             saveBoundingBoxes(out.data.words);
           })
@@ -76,24 +77,24 @@
         img.alt = 'thumb';
         imgBox.appendChild(img);
       }
-      // bbox 
-function saveBoundingBoxes(words) {
-            boundingBoxData = words.map(word => word.bbox);
-            updateBoundingBoxDisplay();
-}
-            function updateBoundingBoxDisplay() {
-            var boundingBoxInfoElement = document.getElementById('bboxInfo');
-            boundingBoxInfoElement.innerHTML = 'Bounding Box Data:<br>';
 
-            boundingBoxData.forEach(function(bbox, index) {
-                var boxInfo = document.createElement('div');
-                boxInfo.innerHTML = `Word ${index + 1}: Bounding Box - x0=${bbox.x0}, y0=${bbox.y0}, x1=${bbox.x1}, y1=${bbox.y1}`;
-                boundingBoxInfoElement.appendChild(boxInfo);
-            });
-        }
+      // Bounding Box functions
+      function saveBoundingBoxes(words) {
+        boundingBoxData = words.flatMap(word => word.symbols.map(symbol => symbol.bbox));
+        updateBoundingBoxDisplay();
+      }
 
-// bbox end 
+      function updateBoundingBoxDisplay() {
+        var boundingBoxInfoElement = document.getElementById('bboxInfo');
+        boundingBoxInfoElement.innerHTML = 'Bounding Box Data:<br>';
 
+        boundingBoxData.forEach(function (bbox, index) {
+          var boxInfo = document.createElement('div');
+          boxInfo.innerHTML = `Character ${index + 1}: Bounding Box - x0=${bbox.x0}, y0=${bbox.y0}, x1=${bbox.x1}, y1=${bbox.y1}`;
+          boundingBoxInfoElement.appendChild(boxInfo);
+        });
+      }
+      // End Bounding Box functions
 
       document.getElementById('upload').addEventListener('change', handleChange);
     </script>
