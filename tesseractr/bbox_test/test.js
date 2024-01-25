@@ -6,14 +6,12 @@ Tesseract.recognize(
   imageFilePath,
   'hin', 
   {
-    // psm
+    psm: 6,
   }
-).then(({ data: { blocks } }) => {
-  blocks.forEach(block => {
-    if (block.blocktype === 'fsn' || block.blocktype === 'bsn') {
-      console.log(`Character: ${block.text}, Bounding Box: ${block.bbox}`);
-    }
-  });
+).then(({ data }) => {
+  console.log(JSON.stringify(data, null, 2)); // Print the entire result for inspection
+
+  // The rest of your code to process blocks or symbols
 }).catch((error) => {
   console.error('Error:', error);
 });
