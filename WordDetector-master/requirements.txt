@@ -1,6 +1,0 @@
-matplotlib
-numpy
-opencv-python
-path
-scikit-learn
-pytest
