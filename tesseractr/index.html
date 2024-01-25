@@ -45,13 +45,13 @@
           'hin',
           {
             logger: (e) => console.log(e),
-            psm: 6, // PSM 6 corresponds to "Assume a single uniform block of text"
+            psm: 10, // PSM 10 corresponds to "Single Character" mode
           }
         )
           .then((out) => {
             console.log(out, 'confidence:', out.data.confidence);
             setTextResult(out.data.text);
-            saveBoundingBoxes(out.data.words);
+            saveSymbolBoundingBoxes(out.data.symbols);
           })
           .catch((error) => console.error('Error during OCR:', error));
       }
@@ -78,19 +78,19 @@
         imgBox.appendChild(img);
       }
 
-      // Bounding Box functions
-      function saveBoundingBoxes(words) {
-        boundingBoxData = words.flatMap(word => word.symbols.map(symbol => symbol.bbox));
+      // Bounding Box functions for Symbols
+      function saveSymbolBoundingBoxes(symbols) {
+        boundingBoxData = symbols.map(symbol => symbol.bbox);
         updateBoundingBoxDisplay();
       }
 
       function updateBoundingBoxDisplay() {
         var boundingBoxInfoElement = document.getElementById('bboxInfo');
-        boundingBoxInfoElement.innerHTML = 'Bounding Box Data:<br>';
+        boundingBoxInfoElement.innerHTML = 'Bounding Box Data for Symbols:<br>';
 
         boundingBoxData.forEach(function (bbox, index) {
           var boxInfo = document.createElement('div');
-          boxInfo.innerHTML = `Character ${index + 1}: Bounding Box - x0=${bbox.x0}, y0=${bbox.y0}, x1=${bbox.x1}, y1=${bbox.y1}`;
+          boxInfo.innerHTML = `Symbol ${index + 1}: Bounding Box - x0=${bbox.x0}, y0=${bbox.y0}, x1=${bbox.x1}, y1=${bbox.y1}`;
           boundingBoxInfoElement.appendChild(boxInfo);
         });
       }
