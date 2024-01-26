@@ -6,7 +6,6 @@ Tesseract.recognize(
   imageFilePath,
   'hin', 
   {
-    psm: 8,
   }
 ).then(({ data }) => {
   console.log(JSON.stringify(data, null, 2)); // Print the entire result for inspection
