@@ -28,7 +28,7 @@
     <div class="box-p" id="boxText">result text will appear here</div>
 
     <br> 
-    V8 [add bbox outline] eng
+    V8 [add bbox outline]
     <div class="box-p" id="bboxInfo"></div>
 
     <script>
@@ -37,10 +37,11 @@
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
-          'eng',
+          'hin',
           {
             logger: (e) => console.log(e),
             psm: 10, // Single char,
+      
           }
 
           // try whitelist 
