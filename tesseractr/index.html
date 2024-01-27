@@ -37,10 +37,11 @@
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
-          'hin',
+          'eng',
           {
             logger: (e) => console.log(e),
             psm: 10, // Single char,
+            tessedit_char_whitelist: '0123456789',
       
           }
 
