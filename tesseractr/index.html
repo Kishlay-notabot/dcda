@@ -28,7 +28,7 @@
     <div class="box-p" id="boxText">result text will appear here</div>
 
     <br> 
-    V8 [add bbox outline]
+    V5 [add bbox outline]
     <div class="box-p" id="bboxInfo"></div>
 
     <script>
@@ -37,15 +37,12 @@
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
-          'eng',
+          'hin',
           {
             logger: (e) => console.log(e),
             psm: 10, // Single char,
             tessedit_char_whitelist: '0123456789',
-      
           }
-
-          // try whitelist 
         )
           .then((out) => {
             console.log(out, 'confidence:', out.data.confidence);
@@ -85,7 +82,8 @@
       }
 
       function saveSymbolData(symbols) {
-        symbolData = symbols;
+        // Sort symbols array in descending order based on confidence
+        symbolData = symbols.sort((a, b) => b.confidence - a.confidence);
         updateSymbolDisplay();
       }
 
