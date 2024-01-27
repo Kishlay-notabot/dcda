@@ -10,6 +10,11 @@
       position: absolute;
       left: 0;
     }
+
+    .char:hover {
+      cursor: pointer;
+      background-color: yellow;
+    }
   </style>
 </head>
 <body>
@@ -94,8 +99,42 @@
         symbolData.forEach(function (symbol, index) {
           var symbolInfo = document.createElement('div');
           symbolInfo.innerHTML = `Symbol ${index + 1}: Text - ${symbol.text}, Confidence - ${symbol.confidence.toFixed(2)}, Bounding Box - x0=${symbol.bbox.x0}, y0=${symbol.bbox.y0}, x1=${symbol.bbox.x1}, y1=${symbol.bbox.y1}`;
+          symbolInfo.id = `symbol-${index}`;
           symbolInfoElement.appendChild(symbolInfo);
+
+          // Add event listener for hover
+          symbolInfo.addEventListener('mouseover', function () {
+            highlightBoundingBox(index);
+          });
+
+          // Add event listener for mouseout to reset the color
+          symbolInfo.addEventListener('mouseout', function () {
+            resetBoundingBoxColor();
+          });
         });
+      }
+
+      function highlightBoundingBox(index) {
+        resetBoundingBoxColor();
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = document.querySelector('.box-img img');
+        const { x0, y0, x1, y1 } = symbolData[index].bbox;
+
+        ctx.beginPath();
+        ctx.rect(x0, y0, x1 - x0, y1 - y0);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'green'; // Change the color to black
+        ctx.stroke();
+      }
+
+      function resetBoundingBoxColor() {
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = document.querySelector('.box-img img');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        renderBoundingBoxes(symbolData);
       }
 
       function renderBoundingBoxes(symbols) {
