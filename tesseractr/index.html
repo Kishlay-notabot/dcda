@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
-  <script src='https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js'></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OCR App</title>
@@ -22,6 +21,10 @@
   <div class="App">
     <span>Hi</span>
     
+    versions: node app [app.js] eng hin jpn [can be added with react] 
+    browser only this file [offline] [node is the dependency]
+    online html custom index.html in dcda[this file [but uses cdn link]]
+    revert to 0.1
     <p>
       <label for="upload">Upload</label>
       <input type="file" id="upload" accept="image/*" />
@@ -30,9 +33,8 @@
     <div class="box-p" id="boxText">result text will appear here</div>
 
     <br> 
+    V5 [add bbox outline]
     <div class="box-p" id="bboxInfo"></div>
-    
-    <button id="downloadButton" onclick="downloadImages()">Download Images</button>
 
     <script>
       var symbolData = [];
@@ -52,6 +54,7 @@
             setTextResult(out.data.text);
             saveSymbolData(out.data.symbols);
             renderBoundingBoxes(out.data.symbols);
+            cropAndSaveImages(selectedImg, out.data.symbols);
           })
           .catch((error) => console.error('Error during OCR:', error));
       }
@@ -59,7 +62,7 @@
       function setTextResult(text) {
         document.getElementById('boxText').innerHTML = text
           .split('')
-          .map((char, index) => `<span id="char-${index}" class="char" onmouseout="resetResultTextColor()">${char}</span>`)
+          .map((char, index) => `<span id="char-${index}" class="char">${char}</span>`)
           .join('');
       }
 
@@ -85,7 +88,8 @@
       }
 
       function saveSymbolData(symbols) {
-        symbolData = symbols;
+        // Sort symbols array in descending order based on confidence
+        symbolData = symbols.sort((a, b) => b.confidence - a.confidence);
         updateSymbolDisplay();
       }
 
@@ -95,7 +99,7 @@
 
         symbolData.forEach(function (symbol, index) {
           var symbolInfo = document.createElement('div');
-          symbolInfo.innerHTML = `Symbol ${index + 1}: Text - ${symbol.text}, Bounding Box - x0=${symbol.bbox.x0}, y0=${symbol.bbox.y0}, x1=${symbol.bbox.x1}, y1=${symbol.bbox.y1}`;
+          symbolInfo.innerHTML = `Symbol ${index + 1}: Text - ${symbol.text}, Confidence - ${symbol.confidence.toFixed(2)}, Bounding Box - x0=${symbol.bbox.x0}, y0=${symbol.bbox.y0}, x1=${symbol.bbox.x1}, y1=${symbol.bbox.y1}`;
           symbolInfo.id = `symbol-${index}`;
           symbolInfoElement.appendChild(symbolInfo);
 
@@ -117,23 +121,20 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const img = document.querySelector('.box-img img');
+        const { x0, y0, x1, y1 } = symbolData[index].bbox;
 
-        if (index >= 0 && index < symbolData.length) {
-          const { x0, y0, x1, y1 } = symbolData[index].bbox;
-
-          ctx.beginPath();
-          ctx.rect(x0, y0, x1 - x0, y1 - y0);
-          ctx.lineWidth = 2;
-          ctx.strokeStyle = 'black';
-          ctx.stroke();
-        }
+        ctx.beginPath();
+        ctx.rect(x0, y0, x1 - x0, y1 - y0);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'black'; // Change the color to black
+        ctx.stroke();
       }
 
       function resetBoundingBoxColor() {
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const img = document.querySelector('.box-img img');
-        ctx.clearRect(0, 0, img.width, img.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         renderBoundingBoxes(symbolData);
       }
 
@@ -155,53 +156,45 @@
       }
 
       function cropAndSaveImages(originalImg, symbols) {
-        const zip = new JSZip();
+  const img = document.querySelector('.box-img img');
+  const imgWidth = img.width;
+  const imgHeight = img.height;
 
-        const img = document.querySelector('.box-img img');
+  symbols.forEach((symbol, index) => {
+    const { x0, y0, x1, y1 } = symbol.bbox;
+    const symbolWidth = x1 - x0;
+    const symbolHeight = y1 - y0;
 
-        symbols.forEach((symbol, index) => {
-          const { x0, y0, x1, y1 } = symbol.bbox;
-          const symbolWidth = x1 - x0;
-          const symbolHeight = y1 - y0;
+    // Create a new image element from the original image
+    const imgElement = new Image();
+    imgElement.src = originalImg.src;
 
-          const imgElement = new Image();
-          imgElement.src = originalImg.src;
+    // Create a canvas for each symbol
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = symbolWidth;
+    canvas.height = symbolHeight;
 
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = symbolWidth;
-          canvas.height = symbolHeight;
+    // Draw the symbol on the canvas
+    ctx.drawImage(imgElement, x0, y0, symbolWidth, symbolHeight, 0, 0, symbolWidth, symbolHeight);
 
-          ctx.drawImage(imgElement, x0, y0, symbolWidth, symbolHeight, 0, 0, symbolWidth, symbolHeight);
+    // Convert the canvas content to data URL and save the image
+    const croppedImageData = canvas.toDataURL('image/png');
+    saveImage(croppedImageData, index);
+  });
+}
 
-          const croppedImageData = canvas.toDataURL('image/png');
-          zip.file(`symbol_${index}.png`, croppedImageData.substr(croppedImageData.indexOf(',') + 1), { base64: true });
-        });
 
-        zip.generateAsync({ type: 'blob' })
-          .then((blob) => {
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'cropped_images.zip';
-            link.click();
-          });
+
+      function saveImage(dataUrl, index) {
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `symbol_${index}.png`;
+        link.click();
       }
 
       document.getElementById('upload').addEventListener('change', handleChange);
-
-      function downloadImages() {
-        cropAndSaveImages(document.querySelector('.box-img img'), symbolData);
-      }
-      
-      function resetResultTextColor() {
-        symbolData.forEach(function (_, index) {
-          const resultTextChar = document.getElementById(`char-${index}`);
-          resultTextChar.style.backgroundColor = 'transparent';
-        });
-        resetBoundingBoxColor();
-      }
     </script>
   </div>
 </body>
 </html>
-<!-- v5.2.01  -->
