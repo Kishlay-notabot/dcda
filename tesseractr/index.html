@@ -195,12 +195,27 @@
           });
       }
 
-      document.getElementById('upload').addEventListener('change', handleChange);
-
       function downloadImages() {
         cropAndSaveImages(document.querySelector('.box-img img'), symbolData);
       }
+      
+      function highlightResultText(index) {
+        const resultTextChar = document.getElementById(`char-${index}`);
+        resultTextChar.style.backgroundColor = 'yellow';
+        highlightBoundingBox(index);
+      }
+
+      function resetResultTextColor() {
+        symbolData.forEach(function (_, index) {
+          const resultTextChar = document.getElementById(`char-${index}`);
+          resultTextChar.style.backgroundColor = 'transparent';
+        });
+        resetBoundingBoxColor();
+      }
+
+      document.getElementById('upload').addEventListener('change', handleChange);
     </script>
   </div>
 </body>
 </html>
+<!-- v 5.1 -->
