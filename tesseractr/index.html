@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js'></script>
-
   <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js'></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OCR App</title>
@@ -14,7 +13,7 @@
       left: 0;
     }
 
-    .char:hover {
+    .word:hover {
       cursor: pointer;
       background-color: yellow;
     }
@@ -40,33 +39,32 @@
     <div class="box-p" id="bboxInfo"></div>
 
     <script>
-      var symbolData = [];
+      var wordData = [];
 
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
-          'hin',
+          'hin', // Use 'eng' for English language
           {
             logger: (e) => console.log(e),
-            psm: 10, // Single char,
-            tessedit_char_whitelist: '0123456789',
+            psm: 11, // Word-level detection
           }
         )
           .then((out) => {
             console.log(out, 'confidence:', out.data.confidence);
             setTextResult(out.data.text);
-            saveSymbolData(out.data.symbols);
-            renderBoundingBoxes(out.data.symbols);
-            cropAndSaveImages(selectedImg, out.data.symbols);
+            saveWordData(out.data.words);
+            renderBoundingBoxes(out.data.words);
+            cropAndSaveImages(selectedImg, out.data.words);
           })
           .catch((error) => console.error('Error during OCR:', error));
       }
 
       function setTextResult(text) {
         document.getElementById('boxText').innerHTML = text
-          .split('')
-          .map((char, index) => `<span id="char-${index}" class="char">${char}</span>`)
-          .join('');
+          .split(' ')
+          .map((word, index) => `<span id="word-${index}" class="word">${word}</span>`)
+          .join(' ');
       }
 
       function handleChange(e) {
@@ -90,28 +88,28 @@
         imgBox.appendChild(canvas);
       }
 
-      function saveSymbolData(symbols) {
-        symbolData = symbols;
-        updateSymbolDisplay();
+      function saveWordData(words) {
+        wordData = words;
+        updateWordDisplay();
       }
 
-      function updateSymbolDisplay() {
-        var symbolInfoElement = document.getElementById('bboxInfo');
-        symbolInfoElement.innerHTML = 'Symbol Data:<br>';
+      function updateWordDisplay() {
+        var wordInfoElement = document.getElementById('bboxInfo');
+        wordInfoElement.innerHTML = 'Word Data:<br>';
 
-        symbolData.forEach(function (symbol, index) {
-          var symbolInfo = document.createElement('div');
-          symbolInfo.innerHTML = `Symbol ${index + 1}: Text - ${symbol.text}, Confidence - ${symbol.confidence.toFixed(2)}, Bounding Box - x0=${symbol.bbox.x0}, y0=${symbol.bbox.y0}, x1=${symbol.bbox.x1}, y1=${symbol.bbox.y1}`;
-          symbolInfo.id = `symbol-${index}`;
-          symbolInfoElement.appendChild(symbolInfo);
+        wordData.forEach(function (word, index) {
+          var wordInfo = document.createElement('div');
+          wordInfo.innerHTML = `Word ${index + 1}: Text - ${word.text}, Confidence - ${word.confidence.toFixed(2)}, Bounding Box - x0=${word.bbox.x0}, y0=${word.bbox.y0}, x1=${word.bbox.x1}, y1=${word.bbox.y1}`;
+          wordInfo.id = `word-${index}`;
+          wordInfoElement.appendChild(wordInfo);
 
           // Add event listener for hover
-          symbolInfo.addEventListener('mouseover', function () {
+          wordInfo.addEventListener('mouseover', function () {
             highlightBoundingBox(index);
           });
 
           // Add event listener for mouseout to reset the color
-          symbolInfo.addEventListener('mouseout', function () {
+          wordInfo.addEventListener('mouseout', function () {
             resetBoundingBoxColor();
           });
         });
@@ -123,7 +121,7 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const img = document.querySelector('.box-img img');
-        const { x0, y0, x1, y1 } = symbolData[index].bbox;
+        const { x0, y0, x1, y1 } = wordData[index].bbox;
 
         ctx.beginPath();
         ctx.rect(x0, y0, x1 - x0, y1 - y0);
@@ -137,18 +135,18 @@
         const ctx = canvas.getContext('2d');
         const img = document.querySelector('.box-img img');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        renderBoundingBoxes(symbolData);
+        renderBoundingBoxes(wordData);
       }
 
-      function renderBoundingBoxes(symbols) {
+      function renderBoundingBoxes(words) {
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const img = document.querySelector('.box-img img');
         canvas.width = img.width;
         canvas.height = img.height;
 
-        symbols.forEach((symbol) => {
-          const { x0, y0, x1, y1 } = symbol.bbox;
+        words.forEach((word) => {
+          const { x0, y0, x1, y1 } = word.bbox;
           ctx.beginPath();
           ctx.rect(x0, y0, x1 - x0, y1 - y0);
           ctx.lineWidth = 2;
@@ -157,34 +155,34 @@
         });
       }
 
-      function cropAndSaveImages(originalImg, symbols) {
-        const zip = new JSZip();
-        const img = document.querySelector('.box-img img');
+      function cropAndSaveImages(originalImg, words) {
+  const zip = new JSZip();
 
-        symbols.forEach((symbol, index) => {
-          const { x0, y0, x1, y1 } = symbol.bbox;
-          const symbolWidth = x1 - x0;
-          const symbolHeight = y1 - y0;
+  words.forEach((word, index) => {
+    const { x0, y0, x1, y1 } = word.bbox;
+    const wordWidth = x1 - x0;
+    const wordHeight = y1 - y0;
 
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = symbolWidth;
-          canvas.height = symbolHeight;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = wordWidth;
+    canvas.height = wordHeight;
 
-          // Draw the symbol on the canvas using the original image
-          ctx.drawImage(img, x0, y0, symbolWidth, symbolHeight, 0, 0, symbolWidth, symbolHeight);
+    // Draw the word on the canvas using the original image
+    ctx.drawImage(originalImg, x0, y0, wordWidth, wordHeight, 0, 0, wordWidth, wordHeight);
 
-          // Convert the canvas content to data URL and add to the zip file
-          const imageData = canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, "");
-          zip.file(`symbol_${index}.png`, imageData, { base64: true });
-        });
+    // Convert the canvas content to data URL and add to the zip file
+    const imageData = canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, "");
+    zip.file(`word_${index}.png`, imageData, { base64: true });
+  });
 
-        // Generate a zip file and trigger download
-        zip.generateAsync({ type: "blob" })
-          .then(function (content) {
-            saveAs(content, "symbols.zip");
-          });
-      }
+  // Generate a zip file and trigger download
+  zip.generateAsync({ type: "blob" })
+    .then(function (content) {
+      saveAs(content, "words.zip");
+    });
+}
+
 
       document.getElementById('upload').addEventListener('change', handleChange);
     </script>
