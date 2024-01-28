@@ -157,6 +157,7 @@
 
       function cropAndSaveImages(originalImg, words) {
   const zip = new JSZip();
+  const img = document.querySelector('.box-img img');
 
   words.forEach((word, index) => {
     const { x0, y0, x1, y1 } = word.bbox;
@@ -169,7 +170,7 @@
     canvas.height = wordHeight;
 
     // Draw the word on the canvas using the original image
-    ctx.drawImage(originalImg, x0, y0, wordWidth, wordHeight, 0, 0, wordWidth, wordHeight);
+    ctx.drawImage(img, x0, y0, wordWidth, wordHeight, 0, 0, wordWidth, wordHeight);
 
     // Convert the canvas content to data URL and add to the zip file
     const imageData = canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, "");
