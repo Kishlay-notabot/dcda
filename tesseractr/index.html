@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js'></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OCR App</title>
@@ -35,6 +36,8 @@
     <br> 
     V5 [add bbox outline]
     <div class="box-p" id="bboxInfo"></div>
+    
+    <button id="downloadButton" onclick="downloadImages()">Download Images</button>
 
     <script>
       var symbolData = [];
@@ -155,7 +158,48 @@
         });
       }
 
+      function cropAndSaveImages(originalImg, symbols) {
+        const zip = new JSZip();
+
+        const img = document.querySelector('.box-img img');
+
+        symbols.forEach((symbol, index) => {
+          const { x0, y0, x1, y1 } = symbol.bbox;
+          const symbolWidth = x1 - x0;
+          const symbolHeight = y1 - y0;
+
+          // Create a new image element from the original image
+          const imgElement = new Image();
+          imgElement.src = originalImg.src;
+
+          // Create a canvas for each symbol
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = symbolWidth;
+          canvas.height = symbolHeight;
+
+          // Draw the symbol on the canvas
+          ctx.drawImage(imgElement, x0, y0, symbolWidth, symbolHeight, 0, 0, symbolWidth, symbolHeight);
+
+          // Convert the canvas content to data URL and add to zip
+          const croppedImageData = canvas.toDataURL('image/png');
+          zip.file(`symbol_${index}.png`, croppedImageData.substr(croppedImageData.indexOf(',') + 1), { base64: true });
+        });
+
+        zip.generateAsync({ type: 'blob' })
+          .then((blob) => {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'cropped_images.zip';
+            link.click();
+          });
+      }
+
       document.getElementById('upload').addEventListener('change', handleChange);
+
+      function downloadImages() {
+        cropAndSaveImages(document.querySelector('.box-img img'), symbolData);
+      }
     </script>
   </div>
 </body>
