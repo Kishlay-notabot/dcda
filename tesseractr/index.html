@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js'></script>
+
   <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js'></script>
   <meta charset="UTF-8">
@@ -89,8 +91,7 @@
       }
 
       function saveSymbolData(symbols) {
-        // Sort symbols array in descending order based on confidence
-        symbolData = symbols.sort((a, b) => b.confidence - a.confidence);
+        symbolData = symbols;
         updateSymbolDisplay();
       }
 
@@ -158,6 +159,7 @@
 
       function cropAndSaveImages(originalImg, symbols) {
         const zip = new JSZip();
+        const img = document.querySelector('.box-img img');
 
         symbols.forEach((symbol, index) => {
           const { x0, y0, x1, y1 } = symbol.bbox;
@@ -170,7 +172,7 @@
           canvas.height = symbolHeight;
 
           // Draw the symbol on the canvas using the original image
-          ctx.drawImage(originalImg, x0, y0, symbolWidth, symbolHeight, 0, 0, symbolWidth, symbolHeight);
+          ctx.drawImage(img, x0, y0, symbolWidth, symbolHeight, 0, 0, symbolWidth, symbolHeight);
 
           // Convert the canvas content to data URL and add to the zip file
           const imageData = canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, "");
