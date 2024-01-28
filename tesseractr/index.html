@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js'></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OCR App</title>
@@ -35,6 +36,8 @@
     <br> 
     V5 [add bbox outline]
     <div class="box-p" id="bboxInfo"></div>
+    
+    <button id="downloadButton" onclick="downloadImages()">Download Images</button>
 
     <script>
       var symbolData = [];
@@ -54,7 +57,7 @@
             setTextResult(out.data.text);
             saveSymbolData(out.data.symbols);
             renderBoundingBoxes(out.data.symbols);
-            cropAndSaveImages(selectedImg, out.data.symbols);
+            //cropAndSaveImages(selectedImg, out.data.symbols);
           })
           .catch((error) => console.error('Error during OCR:', error));
       }
@@ -103,29 +106,14 @@
           symbolInfo.id = `symbol-${index}`;
           symbolInfoElement.appendChild(symbolInfo);
 
-          // Add event listener for hover on symbol information
+          // Add event listener for hover
           symbolInfo.addEventListener('mouseover', function () {
             highlightBoundingBox(index);
-            highlightResultText(index);
           });
 
           // Add event listener for mouseout to reset the color
           symbolInfo.addEventListener('mouseout', function () {
             resetBoundingBoxColor();
-            resetResultTextColor();
-          });
-
-          // Add hover effect for characters in the result text
-          const resultTextChar = document.getElementById(`char-${index}`);
-          resultTextChar.addEventListener('mouseover', function () {
-            highlightBoundingBox(index);
-            highlightResultText(index);
-          });
-
-          // Add mouseout event to reset the color
-          resultTextChar.addEventListener('mouseout', function () {
-            resetBoundingBoxColor();
-            resetResultTextColor();
           });
         });
       }
@@ -149,7 +137,7 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const img = document.querySelector('.box-img img');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, img.width, img.height);
         renderBoundingBoxes(symbolData);
       }
 
@@ -171,9 +159,9 @@
       }
 
       function cropAndSaveImages(originalImg, symbols) {
+        const zip = new JSZip();
+
         const img = document.querySelector('.box-img img');
-        const imgWidth = img.width;
-        const imgHeight = img.height;
 
         symbols.forEach((symbol, index) => {
           const { x0, y0, x1, y1 } = symbol.bbox;
@@ -193,32 +181,25 @@
           // Draw the symbol on the canvas
           ctx.drawImage(imgElement, x0, y0, symbolWidth, symbolHeight, 0, 0, symbolWidth, symbolHeight);
 
-          // Convert the canvas content to data URL and save the image
+          // Convert the canvas content to data URL and add to zip
           const croppedImageData = canvas.toDataURL('image/png');
-          saveImage(croppedImageData, index);
+          zip.file(`symbol_${index}.png`, croppedImageData.substr(croppedImageData.indexOf(',') + 1), { base64: true });
         });
-      }
 
-      function saveImage(dataUrl, index) {
-        const link = document.createElement('a');
-        link.href = dataUrl;
-        link.download = `symbol_${index}.png`;
-        link.click();
-      }
-
-      function highlightResultText(index) {
-        const resultTextChar = document.getElementById(`char-${index}`);
-        resultTextChar.style.backgroundColor = 'yellow';
-      }
-
-      function resetResultTextColor() {
-        symbolData.forEach(function (_, index) {
-          const resultTextChar = document.getElementById(`char-${index}`);
-          resultTextChar.style.backgroundColor = 'transparent';
-        });
+        zip.generateAsync({ type: 'blob' })
+          .then((blob) => {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'cropped_images.zip';
+            link.click();
+          });
       }
 
       document.getElementById('upload').addEventListener('change', handleChange);
+
+      function downloadImages() {
+        cropAndSaveImages(document.querySelector('.box-img img'), symbolData);
+      }
     </script>
   </div>
 </body>
