@@ -10,6 +10,16 @@
       position: absolute;
       left: 0;
     }
+
+    .char:hover {
+      cursor: pointer;
+      background-color: yellow;
+    }
+
+    .symbol-info:hover {
+      cursor: pointer;
+      background-color: lightgray;
+    }
   </style>
 </head>
 <body>
@@ -31,24 +41,28 @@
     V5 [add bbox outline]
     <div class="box-p" id="bboxInfo"></div>
 
+    <!-- Add a new div for symbol links -->
+    <div id="symbolLinks"></div>
+
     <script>
       var symbolData = [];
 
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
-          'eng',
+          'hin',
           {
             logger: (e) => console.log(e),
             psm: 10, // Single char,
-        
+            tessedit_char_whitelist: '0123456789',
           }
         )
           .then((out) => {
             console.log(out, 'confidence:', out.data.confidence);
             setTextResult(out.data.text);
             saveSymbolData(out.data.symbols);
-            renderBoundingBoxes(out.data.symbols, selectedImg);
+            renderBoundingBoxes(out.data.symbols);
+            //cropAndSaveImages(selectedImg, out.data.symbols);
           })
           .catch((error) => console.error('Error during OCR:', error));
       }
@@ -56,7 +70,7 @@
       function setTextResult(text) {
         document.getElementById('boxText').innerHTML = text
           .split('')
-          .map((char, index) => `<span id="char-${index}" class="char">${char}</span>`)
+          .map((char, index) => `<span id="char-${index}" class="char" data-index="${index}">${char}</span>`)
           .join('');
       }
 
@@ -94,11 +108,58 @@
         symbolData.forEach(function (symbol, index) {
           var symbolInfo = document.createElement('div');
           symbolInfo.innerHTML = `Symbol ${index + 1}: Text - ${symbol.text}, Confidence - ${symbol.confidence.toFixed(2)}, Bounding Box - x0=${symbol.bbox.x0}, y0=${symbol.bbox.y0}, x1=${symbol.bbox.x1}, y1=${symbol.bbox.y1}`;
+          symbolInfo.id = `symbol-${index}`;
+          symbolInfo.className = 'symbol-info';
           symbolInfoElement.appendChild(symbolInfo);
+
+          // Add event listener for hover
+          symbolInfo.addEventListener('mouseover', function () {
+            highlightBoundingBox(index);
+          });
+
+          // Add event listener for mouseout to reset the color
+          symbolInfo.addEventListener('mouseout', function () {
+            resetBoundingBoxColor();
+          });
         });
       }
 
-      function renderBoundingBoxes(symbols, selectedImg) {
+      function highlightBoundingBox(index) {
+        resetBoundingBoxColor();
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = document.querySelector('.box-img img');
+        const { x0, y0, x1, y1 } = symbolData[index].bbox;
+
+        ctx.beginPath();
+        ctx.rect(x0, y0, x1 - x0, y1 - y0);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'black'; // Change the color to black
+        ctx.stroke();
+
+        // Highlight the corresponding character in yellow
+        const charElement = document.getElementById(`char-${index}`);
+        if (charElement) {
+          charElement.style.backgroundColor = 'yellow';
+        }
+      }
+
+      function resetBoundingBoxColor() {
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = document.querySelector('.box-img img');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        renderBoundingBoxes(symbolData);
+
+        // Reset the background color of all characters
+        const charElements = document.querySelectorAll('.char');
+        charElements.forEach((charElement) => {
+          charElement.style.backgroundColor = '';
+        });
+      }
+
+      function renderBoundingBoxes(symbols) {
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const img = document.querySelector('.box-img img');
