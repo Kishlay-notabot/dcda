@@ -22,10 +22,6 @@
   <div class="App">
     <span>Hi</span>
     
-    versions: node app [app.js] eng hin jpn [can be added with react] 
-    browser only this file [offline] [node is the dependency]
-    online html custom index.html in dcda[this file [but uses cdn link]]
-    revert to 0.1
     <p>
       <label for="upload">Upload</label>
       <input type="file" id="upload" accept="image/*" />
@@ -34,7 +30,6 @@
     <div class="box-p" id="boxText">result text will appear here</div>
 
     <br> 
-    V5 [add bbox outline]
     <div class="box-p" id="bboxInfo"></div>
     
     <button id="downloadButton" onclick="downloadImages()">Download Images</button>
@@ -57,7 +52,6 @@
             setTextResult(out.data.text);
             saveSymbolData(out.data.symbols);
             renderBoundingBoxes(out.data.symbols);
-            //cropAndSaveImages(selectedImg, out.data.symbols);
           })
           .catch((error) => console.error('Error during OCR:', error));
       }
@@ -65,7 +59,7 @@
       function setTextResult(text) {
         document.getElementById('boxText').innerHTML = text
           .split('')
-          .map((char, index) => `<span id="char-${index}" class="char" onmouseover="highlightResultText(${index})" onmouseout="resetResultTextColor()">${char}</span>`)
+          .map((char, index) => `<span id="char-${index}" class="char" onmouseout="resetResultTextColor()">${char}</span>`)
           .join('');
       }
 
@@ -91,8 +85,7 @@
       }
 
       function saveSymbolData(symbols) {
-        // Sort symbols array in descending order based on confidence
-        symbolData = symbols.sort((a, b) => b.confidence - a.confidence);
+        symbolData = symbols;
         updateSymbolDisplay();
       }
 
@@ -102,7 +95,7 @@
 
         symbolData.forEach(function (symbol, index) {
           var symbolInfo = document.createElement('div');
-          symbolInfo.innerHTML = `Symbol ${index + 1}: Text - ${symbol.text}, Confidence - ${symbol.confidence.toFixed(2)}, Bounding Box - x0=${symbol.bbox.x0}, y0=${symbol.bbox.y0}, x1=${symbol.bbox.x1}, y1=${symbol.bbox.y1}`;
+          symbolInfo.innerHTML = `Symbol ${index + 1}: Text - ${symbol.text}, Bounding Box - x0=${symbol.bbox.x0}, y0=${symbol.bbox.y0}, x1=${symbol.bbox.x1}, y1=${symbol.bbox.y1}`;
           symbolInfo.id = `symbol-${index}`;
           symbolInfoElement.appendChild(symbolInfo);
 
@@ -119,34 +112,22 @@
       }
 
       function highlightBoundingBox(index) {
-  resetBoundingBoxColor();
+        resetBoundingBoxColor();
 
-  const canvas = document.getElementById('canvas');
-  const ctx = canvas.getContext('2d');
-  const img = document.querySelector('.box-img img');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = document.querySelector('.box-img img');
 
-  // Ensure the index is within bounds
-  if (index >= 0 && index < symbolData.length) {
-    const { x0, y0, x1, y1 } = symbolData[index].bbox;
+        if (index >= 0 && index < symbolData.length) {
+          const { x0, y0, x1, y1 } = symbolData[index].bbox;
 
-    ctx.beginPath();
-    ctx.rect(x0, y0, x1 - x0, y1 - y0);
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = 'black'; // Change the color to black
-    ctx.stroke();
-  }
-}
-
-function highlightResultText(index) {
-  const resultTextChar = document.getElementById(`char-${index}`);
-
-  // Ensure the index is within bounds
-  if (index >= 0 && index < symbolData.length) {
-    resultTextChar.style.backgroundColor = 'yellow';
-    highlightBoundingBox(index);
-  }
-}
-
+          ctx.beginPath();
+          ctx.rect(x0, y0, x1 - x0, y1 - y0);
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = 'black';
+          ctx.stroke();
+        }
+      }
 
       function resetBoundingBoxColor() {
         const canvas = document.getElementById('canvas');
@@ -183,20 +164,16 @@ function highlightResultText(index) {
           const symbolWidth = x1 - x0;
           const symbolHeight = y1 - y0;
 
-          // Create a new image element from the original image
           const imgElement = new Image();
           imgElement.src = originalImg.src;
 
-          // Create a canvas for each symbol
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
           canvas.width = symbolWidth;
           canvas.height = symbolHeight;
 
-          // Draw the symbol on the canvas
           ctx.drawImage(imgElement, x0, y0, symbolWidth, symbolHeight, 0, 0, symbolWidth, symbolHeight);
 
-          // Convert the canvas content to data URL and add to zip
           const croppedImageData = canvas.toDataURL('image/png');
           zip.file(`symbol_${index}.png`, croppedImageData.substr(croppedImageData.indexOf(',') + 1), { base64: true });
         });
@@ -216,7 +193,6 @@ function highlightResultText(index) {
         cropAndSaveImages(document.querySelector('.box-img img'), symbolData);
       }
       
-
       function resetResultTextColor() {
         symbolData.forEach(function (_, index) {
           const resultTextChar = document.getElementById(`char-${index}`);
@@ -228,4 +204,4 @@ function highlightResultText(index) {
   </div>
 </body>
 </html>
-<!-- v5.2.1  -->
+<!-- v5.2.01  -->
