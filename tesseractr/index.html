@@ -37,18 +37,18 @@
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
-          'hin',
+          'eng',
           {
             logger: (e) => console.log(e),
             psm: 10, // Single char,
-            tessedit_char_whitelist: '0123456789',
+        
           }
         )
           .then((out) => {
             console.log(out, 'confidence:', out.data.confidence);
             setTextResult(out.data.text);
             saveSymbolData(out.data.symbols);
-            renderBoundingBoxes(out.data.symbols);
+            renderBoundingBoxes(out.data.symbols, selectedImg);
           })
           .catch((error) => console.error('Error during OCR:', error));
       }
@@ -98,7 +98,7 @@
         });
       }
 
-      function renderBoundingBoxes(symbols) {
+      function renderBoundingBoxes(symbols, selectedImg) {
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const img = document.querySelector('.box-img img');
