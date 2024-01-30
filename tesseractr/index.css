@@ -12,42 +12,27 @@
   position: fixed;
   border-radius: 4px;
   right: 0;
-  padding: 10px;
-  background-color: #303030;
+  padding: 10px; 
+  background-color: #303030; 
   display: flex;
-  align-items: center;
+  align-items: center; 
   color: white;
 }
-
 .langfield span {
   margin-right: 7px;
 }
 
-body {
+
+body{
   background-color: antiquewhite;
 }
 
-.App {
-  display: flex;
+#boxText{
+border:3px solid black;
+padding: 4px;
 }
 
-.box-img {
-  max-width: 50%;
-  box-sizing: border-box;
-  padding: 10px;
-}
-
-#boxImg img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-#bboxInfo {
-  max-width: 50%;
-  box-sizing: border-box;
-  padding: 10px;
-  margin: 10px;
-  border: 3px solid salmon;
+#bboxInfo{
+border: 3px solid salmon;
+padding: 4px;
 }
