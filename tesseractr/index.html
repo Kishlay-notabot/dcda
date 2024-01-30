@@ -40,25 +40,29 @@
 
     <script>
       var wordData = [];
+      
 
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
-          'hin',
+          'eng',
           {
             logger: (e) => console.log(e),
             psm: 11,
           }
         )
+        
           .then((out) => {
             console.log(out, 'confidence:', out.data.confidence);
             setTextResult(out.data.text);
             saveWordData(out.data.words);
             renderBoundingBoxes(out.data.words);
             cropAndSaveImages(selectedImg, out.data.words);
+            
           })
           .catch((error) => console.error('Error during OCR:', error));
       }
+
 
       function setTextResult(text) {
         document.getElementById('boxText').innerHTML = text
@@ -153,6 +157,7 @@
           ctx.strokeStyle = 'red';
           ctx.stroke();
         });
+        console.log('bboxes rendered')
       }
 
       function cropAndSaveImages(originalImg, words) {
@@ -175,6 +180,7 @@
     // Convert the canvas content to data URL and add to the zip file
     const imageData = canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, "");
     zip.file(`word_${index}.png`, imageData, { base64: true });
+    console.log('words cropped')
   });
 
   // Generate a zip file and trigger download
@@ -182,6 +188,7 @@
     .then(function (content) {
       saveAs(content, "words.zip");
     });
+
 }
 
 
