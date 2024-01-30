@@ -1,0 +1,20 @@
+#canvas {
+    position: absolute;
+    left: 0;
+  }
+
+  .word:hover {
+    cursor: pointer;
+    background-color: yellow;
+  }
+
+  .langfield {
+    position: fixed;
+    border-radius: 4px;
+    right: 0;
+    padding: 10px; 
+    background-color: #303030; 
+    display: flex;
+    align-items: center; 
+    color: white;
+  }
