@@ -44,10 +44,10 @@
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
-          'hin', // Use 'eng' for English language
+          'hin',
           {
             logger: (e) => console.log(e),
-            psm: 11, // Word-level detection
+            psm: 11,
           }
         )
           .then((out) => {
