@@ -4,9 +4,10 @@
   <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js'></script>
+  <link rel="stylesheet" href="index.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OCR App</title>
+  <title>V7.5</title>
   <style>
     #canvas {
       position: absolute;
@@ -22,11 +23,10 @@
 <body>
   <div class="App">
     <span>Hi</span>
-    
-    versions: node app [app.js] eng hin jpn [can be added with react] 
+    Current language: 
+     <!-- versions: node app [app.js] eng hin jpn [can be added with react] 
     browser only this file [offline] [node is the dependency]
-    online html custom index.html in dcda[this file [but uses cdn link]]
-    revert to 0.1
+    online html custom index.html in dcda[this file [but uses cdn link]] -->
     <p>
       <label for="upload">Upload</label>
       <input type="file" id="upload" accept="image/*" />
@@ -35,17 +35,19 @@
     <div class="box-p" id="boxText">result text will appear here</div>
 
     <br> 
-    V7 [     forgot the count of revisions done :-(      ]
+    V7.5 
+    <!-- [     forgot the count of revisions done :-(      ] -->
     <div class="box-p" id="bboxInfo"></div>
 
     <script>
+      console.log('hello world.')
       var wordData = [];
-      
+      var Currentlang = 'eng'
 
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
-          'eng',
+          Currentlang,
           {
             logger: (e) => console.log(e),
             psm: 11,
