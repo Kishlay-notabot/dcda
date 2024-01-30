@@ -1,7 +1,8 @@
 # dcda  
 
 Devanagari Character Dataset Automation for ML models  
-Ongoing research project, more details will be added soon  
+Ongoing research project, more details will be added soon  <br>
+Also read [ai.md](https://github.com/Kishlay-notabot/dcda/blob/main/tesseractr/docs/ai.md)
 
   
 ---
