@@ -14,7 +14,7 @@
     <div>Hi</div> 
     
      <div class="langfield">
-      <span>Current language:</span> <input type="text" id="langinput" placeholder="xxx" maxlength="4" /> </div>
+      <span>Current language: <span id="currentLangDisplay">${Currentlang}</span></span> Change Lang:<input type="text" id="langinput" placeholder="xxx" /> </div>
    
     
     
@@ -38,9 +38,15 @@
     <div class="box-p" id="bboxInfo"></div>
 
     <script>
+      var Currentlang = 'eng'
+      document.getElementById('currentLangDisplay').innerText = Currentlang;
+      document.getElementById('langinput').addEventListener('input', function (event) {
+  Currentlang = event.target.value; 
+  document.getElementById('currentLangDisplay').innerText = Currentlang;
+      });
       console.log('hello world.')
       var wordData = [];
-      var Currentlang = 'eng'
+      
 
       function performOCR(selectedImg) {
         Tesseract.recognize(
@@ -174,16 +180,15 @@
     canvas.width = wordWidth;
     canvas.height = wordHeight;
 
-    // Draw the word on the canvas using the original image
+  
     ctx.drawImage(img, x0, y0, wordWidth, wordHeight, 0, 0, wordWidth, wordHeight);
 
-    // Convert the canvas content to data URL and add to the zip file
+  
     const imageData = canvas.toDataURL('image/png').replace(/^data:image\/(png|jpg);base64,/, "");
     zip.file(`word_${index}.png`, imageData, { base64: true });
     console.log('words cropped')
   });
 
-  // Generate a zip file and trigger download
   zip.generateAsync({ type: "blob" })
     .then(function (content) {
       saveAs(content, "words.zip");
