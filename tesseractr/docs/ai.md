@@ -21,6 +21,6 @@ When I was trying symbol level detection in Tesseract at multiple instances of t
 <br>
 <br>
 I learnt about that topic, wrote code, and it ran successfully, generating what I needed. I took some good pieces of my project and generated a pull request in the Tesseract.js repository so that in the future when someone tries to work on something similar to this, they do not have to face the countless hours of research and brain storming I had to do to come to that stage. 
-<br>
+<br><br>
 Thats all I had to say about my usage of LLMs, thankyou for reading.
 
