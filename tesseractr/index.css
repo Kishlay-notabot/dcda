@@ -21,3 +21,18 @@
   .langfield span {
     margin-right: 7px;
   }
+
+
+  body{
+    background-color: antiquewhite;
+  }
+
+#boxText{
+  border:3px solid black;
+  padding: 4px;
+}
+
+#bboxInfo{
+  border: 3px solid salmon;
+  padding: 4px;
+}
