@@ -1,38 +1,60 @@
 #canvas {
-    position: absolute;
-    left: 0;
-  }
-
-  .word:hover {
-    cursor: pointer;
-    background-color: yellow;
-  }
-
-  .langfield {
-    position: fixed;
-    border-radius: 4px;
-    right: 0;
-    padding: 10px; 
-    background-color: #303030; 
-    display: flex;
-    align-items: center; 
-    color: white;
-  }
-  .langfield span {
-    margin-right: 7px;
-  }
-
-
-  body{
-    background-color: antiquewhite;
-  }
-
-#boxText{
-  border:3px solid black;
-  padding: 4px;
+  position: absolute;
+  left: 0;
 }
 
-#bboxInfo{
-  border: 3px solid salmon;
-  padding: 4px;
+.word:hover {
+  cursor: pointer;
+  background-color: yellow;
+}
+
+.langfield {
+  position: fixed;
+  border-radius: 4px;
+  right: 0;
+  padding: 10px;
+  background-color: #303030;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.langfield span {
+  margin-right: 7px;
+}
+
+body {
+  background-color: antiquewhite;
+}
+
+.App {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.box-img {
+  flex: 1;
+  max-width: 50%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+#boxImg img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+#boxText, #bboxInfo {
+  flex: 1;
+  max-width: 50%;
+  box-sizing: border-box;
+  padding: 10px;
+  margin: 10px;
+  border: 3px solid;
+}
+
+#bboxInfo {
+  border-color: salmon;
 }
