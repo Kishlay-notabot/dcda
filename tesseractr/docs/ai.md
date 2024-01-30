@@ -19,6 +19,7 @@ Also to point that we do not have to overuse it, just extreme cases when you rea
 One excellent and really impressive task which AI performs and which fairly impressed me so much is that how it generates stuff so to the point even if it is hard to find on the internet or when you are fairly new to something.
 When I was trying symbol level detection in Tesseract at multiple instances of the project (PyTesseract, GIr, Tesseract.js) I was unsuccessful, but when I prompted the AI to generate code, It introduced me to the `blocks` output. And that was the point when I successfully achieved character level recognition. The documentation and example code related to that were absent in the main repo, So here AI taught me and guided me from scratch, in that topic. 
 <br>
+<br>
 I learnt about that topic, wrote code, and it ran successfully, generating what I needed. I took some good pieces of my project and generated a pull request in the Tesseract.js repository so that in the future when someone tries to work on something similar to this, they do not have to face the countless hours of research and brain storming I had to do to come to that stage. 
 <br>
 Thats all I had to say about my usage of LLMs, thankyou for reading.
