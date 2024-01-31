@@ -1,54 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tesseract.js Image Recognition</title>
-</head>
-<body>
-    <input type="file" id="imageInput" multiple accept="image/*">
-    <button onclick="processImages()">Process Images</button>
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <script src="/dist/tesseract.min.js"></script>
+  </head>
+  <body>
+    <input type="file" id="uploader" multiple>
+    <script type="module">
 
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    <script>
-        const { createWorker, createScheduler } = Tesseract;
+      // This example builds on "basic-efficient.html".
+      // Rather than using a single worker, a scheduler manages a pool of multiple workers. 
+      // While performance is similar for a single file, this parallel processing results in significantly
+      // faster speeds when used with multiple files.
 
-        const processImages = async () => {
-            const imageInput = document.getElementById('imageInput');
-            const files = [...imageInput.files]; // Convert files object to an array
+      const scheduler = Tesseract.createScheduler();
 
-            if (!files.length) {
-                alert('Please select one or more images.');
-                return;
-            }
+      // Creates worker and adds to scheduler
+      const workerGen = async () => {
+        const worker = await Tesseract.createWorker("hin", 1, {
+          corePath: '../../node_modules/tesseract.js-core',
+          workerPath: "/dist/worker.min.js",
+          logger: function(m){console.log(m);}
+        });
+        scheduler.addWorker(worker);
+      }
 
-            const scheduler = createScheduler();
+      const workerN = 4;
+      (async () => {
+        const resArr = Array(workerN);
+        for (let i=0; i<workerN; i++) {
+          resArr[i] = await workerGen();
+        }
+      })();
 
-            // Create workers based on the number of selected images
-            const workers = await Promise.all(files.map((_, index) =>
-                createWorker({
-                    workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js',
-                    langPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/langs/',
-                    corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract-core.wasm.js'
-                })
-            ));
+      const recognize = async function(evt){
+        const files = evt.target.files;
 
-            workers.forEach(worker => scheduler.addWorker(worker));
+        for (let i=0; i<files.length; i++) {
+          scheduler.addJob('recognize', files[i]).then((x) => console.log(x.data.text))
+        }
+      }
 
-            // Add recognition jobs for each selected image
-            const results = await Promise.all(files.map(async (file, index) => {
-                const imageURL = URL.createObjectURL(file);
-                return scheduler.addJob('recognize', imageURL);
-            }));
-
-            console.log(results);
-
-            // Terminate workers and scheduler
-            await scheduler.terminate();
-        };
-
-        // Attach the processImages function to the button click event
-        document.getElementById('imageInput').addEventListener('change', processImages);
+      const elm = document.getElementById('uploader');
+      elm.addEventListener('change', recognize);
     </script>
-</body>
+  </body>
 </html>
