@@ -36,6 +36,8 @@ def process_images(input_folder, output_folder_gray, output_folder_binarized):
         apply_binarization(output_path_gray, output_path_binarized)
         print(f"Processed image {idx}/{total_images} (Binarized): {output_path_binarized}")
 
+    input("Press Enter to exit.")
+
 if __name__ == "__main__":
     input_folder = "input_images"
     output_folder_gray = "output_images/output_images_gray"
