@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <style>
+        body {
+            height: 100vh;
+            margin: 10px;
+        }
+
+        #imageGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
+            gap: 20px; /* Increased gap for more padding */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .thumbnail {
+            width: 205px;
+            height: 150px;
+            border: 3px solid black;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <input type="file" id="imageInput" multiple>
+    <div id="imageGrid"></div>
+
+    <script>
+        document.getElementById('imageInput').addEventListener('change', handleFileSelect);
+
+        function handleFileSelect(event) {
+            const imageGrid = document.getElementById('imageGrid');
+            imageGrid.innerHTML = '';
+
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const thumbnailContainer = document.createElement('div');
+                    thumbnailContainer.classList.add('thumbnail');
+
+                    const thumbnailImage = document.createElement('img');
+                    thumbnailImage.src = e.target.result;
+
+                    thumbnailContainer.appendChild(thumbnailImage);
+                    imageGrid.appendChild(thumbnailContainer);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
