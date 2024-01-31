@@ -14,7 +14,7 @@
 
   <script>
     async function runRecognition() {
-      const { createWorker, createScheduler, createLogger } = Tesseract;
+      const { createWorker } = Tesseract;
       const imageInput = document.getElementById('imageInput');
       const files = imageInput.files;
 
@@ -23,28 +23,30 @@
         return;
       }
 
-      const scheduler = createScheduler();
-
       const numberOfWorkers = 10;
       const workers = await Promise.all(Array(numberOfWorkers).fill(0).map(async (_, index) => {
-        const worker = await createWorker('eng');
-        const logger = createLogger();
-        worker.logger = logger;
-        scheduler.addWorker(worker);
-        return { worker, logger, index };
+        const worker = createWorker({
+          workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js',
+          langPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/lang/',
+          corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract-core.wasm.js',
+        });
+        // Set up logging directly on the worker object
+        worker.logger = (info) => console.log(`Worker ${index + 1}:`, info);
+        return { worker, index };
       }));
 
       const imagePaths = Array.from(files).map(file => URL.createObjectURL(file));
 
       const results = await Promise.all(imagePaths.map(async (imagePath, index) => {
         const workerIndex = index % numberOfWorkers;
-        const job = await scheduler.addJob('recognize', imagePath);
-        return { index, workerIndex, job, logger: workers[workerIndex].logger };
+        const { data } = await workers[workerIndex].worker.recognize(imagePath);
+        return { index, workerIndex, data };
       }));
 
       console.log(results);
 
-      await scheduler.terminate(); // It also terminates all workers.
+      // Terminate workers
+      workers.forEach(({ worker }) => worker.terminate());
     }
   </script>
 </body>
