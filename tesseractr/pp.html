@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tesseract.js Image Recognition</title>
+</head>
+<body>
+    <input type="file" id="imageInput" multiple accept="image/*">
+    <button onclick="processImages()">Process Images</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script>
+        const { createWorker, createScheduler } = Tesseract;
+
+        const processImages = async () => {
+            const imageInput = document.getElementById('imageInput');
+            const files = [...imageInput.files]; // Convert files object to an array
+
+            if (!files.length) {
+                alert('Please select one or more images.');
+                return;
+            }
+
+            const scheduler = createScheduler();
+
+            // Create workers based on the number of selected images
+            const workers = await Promise.all(files.map((_, index) =>
+                createWorker({
+                    workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js',
+                    langPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/langs/',
+                    corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract-core.wasm.js'
+                })
+            ));
+
+            workers.forEach(worker => scheduler.addWorker(worker));
+
+            // Add recognition jobs for each selected image
+            const results = await Promise.all(files.map(async (file, index) => {
+                const imageURL = URL.createObjectURL(file);
+                return scheduler.addJob('recognize', imageURL);
+            }));
+
+            console.log(results);
+
+            // Terminate workers and scheduler
+            await scheduler.terminate();
+        };
+
+        // Attach the processImages function to the button click event
+        document.getElementById('imageInput').addEventListener('change', processImages);
+    </script>
+</body>
+</html>
