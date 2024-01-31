@@ -1,68 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Gallery</title>
-    <style>
-        body {
-            height: 100vh;
-            margin: 10px;
-        }
-
-        #imageGrid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
-            gap: 20px; /* Increased gap for more padding */
-            justify-content: center;
-            align-items: center;
-        }
-
-        .thumbnail {
-            width: 205px;
-            height: 150px;
-            border: 3px solid black;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tesseract.js Image Recognition</title>
 </head>
 <body>
-    <input type="file" id="imageInput" multiple>
-    <div id="imageGrid"></div>
+  <h1>Tesseract.js Image Recognition</h1>
 
-    <script>
-        document.getElementById('imageInput').addEventListener('change', handleFileSelect);
+  <input type="file" id="imageInput" multiple>
+  <button onclick="runRecognition()">Run Recognition</button>
 
-        function handleFileSelect(event) {
-            const imageGrid = document.getElementById('imageGrid');
-            imageGrid.innerHTML = '';
+  <script>
+    async function runRecognition() {
+      const { createWorker, createScheduler, createLogger } = Tesseract;
+      const imageInput = document.getElementById('imageInput');
+      const files = imageInput.files;
 
-            const files = event.target.files;
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const reader = new FileReader();
+      if (files.length === 0) {
+        alert('Please select at least one image.');
+        return;
+      }
 
-                reader.onload = function(e) {
-                    const thumbnailContainer = document.createElement('div');
-                    thumbnailContainer.classList.add('thumbnail');
+      const scheduler = createScheduler();
 
-                    const thumbnailImage = document.createElement('img');
-                    thumbnailImage.src = e.target.result;
+      const numberOfWorkers = 10;
+      const workers = await Promise.all(Array(numberOfWorkers).fill(0).map(async (_, index) => {
+        const worker = await createWorker('eng');
+        const logger = createLogger();
+        worker.logger = logger;
+        scheduler.addWorker(worker);
+        return { worker, logger, index };
+      }));
 
-                    thumbnailContainer.appendChild(thumbnailImage);
-                    imageGrid.appendChild(thumbnailContainer);
-                };
+      const imagePaths = Array.from(files).map(file => URL.createObjectURL(file));
 
-                reader.readAsDataURL(file);
-            }
-        }
-    </script>
+      const results = await Promise.all(imagePaths.map(async (imagePath, index) => {
+        const workerIndex = index % numberOfWorkers;
+        const job = await scheduler.addJob('recognize', imagePath);
+        return { index, workerIndex, job, logger: workers[workerIndex].logger };
+      }));
+
+      console.log(results);
+
+      await scheduler.terminate(); // It also terminates all workers.
+    }
+  </script>
 </body>
 </html>
