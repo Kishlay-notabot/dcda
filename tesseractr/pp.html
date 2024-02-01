@@ -62,6 +62,35 @@
 
                 reader.readAsDataURL(file);
             }
+
+            // After displaying images, use the scheduler code for recognition
+            recognize(files);
+        }
+
+        const scheduler = Tesseract.createScheduler();
+
+        // Creates worker and adds to scheduler
+        const workerGen = async () => {
+            const worker = await Tesseract.createWorker("eng", 1, {
+                corePath: '../../node_modules/tesseract.js-core',
+                workerPath: "/dist/worker.min.js",
+                logger: function(m){console.log(m);}
+            });
+            scheduler.addWorker(worker);
+        }
+
+        const workerN = 4;
+        (async () => {
+            const resArr = Array(workerN);
+            for (let i=0; i<workerN; i++) {
+                resArr[i] = await workerGen();
+            }
+        })();
+
+        const recognize = async function(files) {
+            for (let i=0; i<files.length; i++) {
+                scheduler.addJob('recognize', files[i]).then((x) => console.log(x.data.text));
+            }
         }
     </script>
 </body>
