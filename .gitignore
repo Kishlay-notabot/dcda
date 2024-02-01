@@ -1,2 +1,10 @@
-/tesseractr/gImageReader_ci-latest-master_gtk/gimagereader.log
-/tesseractr/gImageReader_ci-latest-master_gtk/twain.log
+.DS_Store
+/tesseractr/tm/node_modules/*
+yarn.lock
+tesseract.min.js
+worker.min.js
+*.traineddata
+*.traineddata.gz
+.nyc_output
+dist/
+*.swp
