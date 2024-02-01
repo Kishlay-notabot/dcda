@@ -1,97 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Gallery</title>
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <script src="/dist/tesseract.min.js"></script>
     <style>
-        body {
-            height: 100vh;
-            margin: 10px;
-        }
+      body {
+        height: 100vh;
+        margin: 10px;
+      }
 
-        #imageGrid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
-            gap: 20px; /* Increased gap for more padding */
-            justify-content: center;
-            align-items: center;
-        }
+      #imageGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+      }
 
-        .thumbnail {
-            width: 205px;
-            height: 150px;
-            border: 3px solid black;
-            overflow: hidden;
-            position: relative;
-        }
+      .thumbnail {
+        width: 205px;
+        height: 150px;
+        border: 3px solid black;
+        overflow: hidden;
+        position: relative;
+      }
 
-        .thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+      .thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
     </style>
-</head>
-<body>
-    <input type="file" id="imageInput" multiple>
+  </head>
+  <body>
+    <input type="file" id="uploader" multiple>
     <div id="imageGrid"></div>
+    <script type="module">
+      const scheduler = Tesseract.createScheduler();
 
-    <script>
-        document.getElementById('imageInput').addEventListener('change', handleFileSelect);
+      const workerGen = async () => {
+        const worker = await Tesseract.createWorker("hin", 1, {
+          corePath: '../../node_modules/tesseract.js-core',
+          workerPath: "/dist/worker.min.js",
+          logger: function(m){console.log(m);}
+        });
+        scheduler.addWorker(worker);
+      }
 
-        function handleFileSelect(event) {
-            const imageGrid = document.getElementById('imageGrid');
-            imageGrid.innerHTML = '';
-
-            const files = event.target.files;
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const reader = new FileReader();
-
-                reader.onload = function(e) {
-                    const thumbnailContainer = document.createElement('div');
-                    thumbnailContainer.classList.add('thumbnail');
-
-                    const thumbnailImage = document.createElement('img');
-                    thumbnailImage.src = e.target.result;
-
-                    thumbnailContainer.appendChild(thumbnailImage);
-                    imageGrid.appendChild(thumbnailContainer);
-                };
-
-                reader.readAsDataURL(file);
-            }
-
-            // After displaying images, use the scheduler code for recognition
-            recognize(files);
+      const workerN = 4;
+      (async () => {
+        const resArr = Array(workerN);
+        for (let i=0; i<workerN; i++) {
+          resArr[i] = await workerGen();
         }
+      })();
 
-        const scheduler = Tesseract.createScheduler();
+      const recognize = async function(evt){
+        const files = evt.target.files;
+        const imageGrid = document.getElementById('imageGrid');
+        imageGrid.innerHTML = '';
 
-        // Creates worker and adds to scheduler
-        const workerGen = async () => {
-            const worker = await Tesseract.createWorker("eng", 1, {
-                corePath: '../../node_modules/tesseract.js-core',
-                workerPath: "/dist/worker.min.js",
-                logger: function(m){console.log(m);}
-            });
-            scheduler.addWorker(worker);
+        for (let i=0; i<files.length; i++) {
+          const file = files[i];
+          const reader = new FileReader();
+
+          reader.onload = function(e) {
+            const thumbnailContainer = document.createElement('div');
+            thumbnailContainer.classList.add('thumbnail');
+
+            const thumbnailImage = document.createElement('img');
+            thumbnailImage.src = e.target.result;
+
+            thumbnailContainer.appendChild(thumbnailImage);
+            imageGrid.appendChild(thumbnailContainer);
+          };
+
+          reader.readAsDataURL(file);
+
+          scheduler.addJob('recognize', file).then((x) => console.log(x.data.text))
         }
+      }
 
-        const workerN = 4;
-        (async () => {
-            const resArr = Array(workerN);
-            for (let i=0; i<workerN; i++) {
-                resArr[i] = await workerGen();
-            }
-        })();
-
-        const recognize = async function(files) {
-            for (let i=0; i<files.length; i++) {
-                scheduler.addJob('recognize', files[i]).then((x) => console.log(x.data.text));
-            }
-        }
+      const elm = document.getElementById('uploader');
+      elm.addEventListener('change', recognize);
     </script>
-</body>
+  </body>
 </html>
