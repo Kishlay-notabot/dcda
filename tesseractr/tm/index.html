@@ -44,7 +44,7 @@
       const scheduler = Tesseract.createScheduler();
 
       const workerGen = async () => {
-        const worker = await Tesseract.createWorker("hin", 1, {
+        const worker = await Tesseract.createWorker("eng", 1, {
           corePath: '../../node_modules/tesseract.js-core',
           workerPath: "/dist/worker.min.js",
           logger: function(m){console.log(m);}
