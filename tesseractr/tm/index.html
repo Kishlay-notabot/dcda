@@ -1,12 +1,6 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-
-
-
-    <!-- cd tesseractr/tm/ 
-    then run npm start
-  then visit http://127.0.0.1:3000/ -->
     <script src="/dist/tesseract.min.js"></script>
     <style>
       body {
@@ -44,7 +38,7 @@
       const scheduler = Tesseract.createScheduler();
 
       const workerGen = async () => {
-        const worker = await Tesseract.createWorker("eng", 1, {
+        const worker = await Tesseract.createWorker("hin", 1, {
           corePath: '../../node_modules/tesseract.js-core',
           workerPath: "/dist/worker.min.js",
           logger: function(m){console.log(m);}
@@ -69,7 +63,7 @@
           const file = files[i];
           const reader = new FileReader();
 
-          reader.onload = function(e) {
+          reader.onload = async function(e) {
             const thumbnailContainer = document.createElement('div');
             thumbnailContainer.classList.add('thumbnail');
 
@@ -78,11 +72,12 @@
 
             thumbnailContainer.appendChild(thumbnailImage);
             imageGrid.appendChild(thumbnailContainer);
+
+            const { data } = await scheduler.addJob('recognize', file);
+            console.log(data.words); // Output word-level data to the console
           };
 
           reader.readAsDataURL(file);
-
-          scheduler.addJob('recognize', file).then((x) => console.log(x.data.text))
         }
       }
 
