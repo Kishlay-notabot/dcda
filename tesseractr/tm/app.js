@@ -1,8 +1,8 @@
 const { createWorker, createScheduler } = require('tesseract.js');
 const path = require('path');
 const imageArr = [
-  path.resolve(__dirname, '../tss.jpg'),
-  path.resolve(__dirname, './img/img1.jpg'),
+  path.resolve(__dirname, '../tss.jpg')
+
   // ... add more image paths here
 ];
 
