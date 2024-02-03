@@ -58,69 +58,63 @@
     }
   })();
 
-  const visitedObjects = new WeakSet();
-
-  const recognize = async function(evt){
+  const recognize = async function(evt) {
     const files = evt.target.files;
     const imageGrid = document.getElementById('imageGrid');
     imageGrid.innerHTML = '';
 
     const allData = []; // Array to store word bboxes, confidence, and image names
 
-    for (let i=0; i<files.length; i++) {
-      const file = files[i];
-      const reader = new FileReader();
+    const processFile = async (file, index) => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
 
-      reader.onload = async function(e) {
-        const thumbnailContainer = document.createElement('div');
-        thumbnailContainer.classList.add('thumbnail');
+        reader.onload = async function(e) {
+          const thumbnailContainer = document.createElement('div');
+          thumbnailContainer.classList.add('thumbnail');
 
-        const thumbnailImage = document.createElement('img');
-        thumbnailImage.src = e.target.result;
+          const thumbnailImage = document.createElement('img');
+          thumbnailImage.src = e.target.result;
 
-        thumbnailContainer.appendChild(thumbnailImage);
-        imageGrid.appendChild(thumbnailContainer);
+          thumbnailContainer.appendChild(thumbnailImage);
+          imageGrid.appendChild(thumbnailContainer);
 
-        console.log(`Processing file: ${file.name}`);
+          console.log(`Processing file: ${file.name}`);
 
-        const worker = workers[i % workers.length];
- // Select worker in round-robin fashion
+          const worker = workers[index % workers.length]; // Correct worker assignment
 
-        const { data } = await worker.recognize(file);
+          const { data } = await worker.recognize(file);
 
-        const imageInfo = {
-          imageName: file.name,
-          words: data.words.map(word => ({
-            text: word.text,
-            bbox: word.bbox,
-            confidence: word.confidence // Include confidence value
-          }))
+          const imageInfo = {
+            imageName: file.name,
+            words: data.words.map(word => ({
+              text: word.text,
+              bbox: word.bbox,
+              confidence: word.confidence // Include confidence value
+            }))
+          };
+
+          console.log(`File ${file.name} processed. Word count: ${data.words.length}`);
+
+          allData.push(imageInfo); // Collect image info for each file
+
+          resolve();
         };
 
-        console.log(`File ${file.name} processed. Word count: ${data.words.length}`);
+        reader.readAsDataURL(file);
+      });
+    };
 
-        allData.push(imageInfo); // Collect image info for each file
+    const promises = [];
 
-        if (allData.length === files.length) {
-          // All files processed, write to JSON file
-          console.log('All files processed. Writing to JSON file...');
-
-          const jsonContent = JSON.stringify(allData, null, 2);
-
-          download(jsonContent, 'word_data.json', 'application/json', (progressEvent) => {
-            // Log real-time byte writing progress
-            const bytesWritten = progressEvent.loaded;
-            const totalBytes = progressEvent.total;
-            console.log(`Progress: ${bytesWritten} bytes / ${totalBytes} bytes`);
-          });
-
-          console.log('JSON file writing complete.');
-        }
-      };
-
-      reader.readAsDataURL(file);
+    for (let i = 0; i < files.length; i++) {
+      promises.push(processFile(files[i], i));
     }
-  }
+
+    await Promise.all(promises); // Wait for all files to be processed
+
+    // Rest of your code (writing to JSON file, etc.)
+  };
 
   const elm = document.getElementById('uploader');
   elm.addEventListener('change', recognize);
