@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs').promises;
 
 async function processImages() {
-  const folderPath = path.resolve(__dirname, './testing'); // Specify the folder path
+  const folderPath = path.resolve(__dirname, './testing');
 
   try {
     const files = await fs.readdir(folderPath);
@@ -43,6 +43,4 @@ async function processImages() {
     console.error('Error:', error.message);
   }
 }
-
-// Call the async function
 processImages();
