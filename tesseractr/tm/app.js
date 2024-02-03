@@ -29,18 +29,32 @@ async function processImages() {
     }
     await Promise.all(resArr);
 
-    const resArr2 = Array(imageArr.length);
+    const results = [];
 
     for (let i = 0; i < imageArr.length; i++) {
       const imagePath = imageArr[i];
-      resArr2[i] = scheduler.addJob('recognize', imagePath).then((x) => console.log(x.data.text));
+      const out = await scheduler.addJob('recognize', imagePath);
+      const result = {
+        imageName: path.basename(imagePath),
+        words: out.data.words.map(word => ({
+          text: word.text,
+          confidence: word.confidence.toFixed(2),
+          bbox: word.bbox,
+        })),
+      };
+      results.push(result);
     }
 
-    await Promise.all(resArr2);
-
     await scheduler.terminate(); //terminate workers
+
+    // Save the results as a JSON file
+    const jsonFilePath = path.resolve(__dirname, 'ocr_results.json');
+    await fs.writeFile(jsonFilePath, JSON.stringify(results, null, 2));
+
+    console.log('OCR results saved to:', jsonFilePath);
   } catch (error) {
     console.error('Error:', error.message);
   }
 }
+
 processImages();
