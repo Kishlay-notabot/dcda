@@ -1,12 +1,11 @@
 const { createWorker, createScheduler } = require('tesseract.js');
 const path = require('path');
-const fs = require('fs');
+const imageArr = [
+  path.resolve(__dirname, '../tss.jpg'),
+  path.resolve(__dirname, './img/img1.jpg'),
+  // ... add more image paths here
+];
 
-
-const imageFolder = path.resolve(__dirname, './testing');
-const imageArr = fs.readdirSync(imageFolder)
-  .filter(file => /\.(jpg|jpeg|png)$/i.test(file))
-  .map(file => path.resolve(imageFolder, file));
 const scheduler = createScheduler();
 // workers
 const workerGen = async () => {
