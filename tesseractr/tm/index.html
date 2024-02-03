@@ -32,7 +32,7 @@
     </style>
   </head>
   <body>
-    v10.2
+    v10
     <input type="file" id="uploader" multiple>
     <div id="imageGrid"></div>
 
@@ -81,8 +81,6 @@
         thumbnailContainer.appendChild(thumbnailImage);
         imageGrid.appendChild(thumbnailContainer);
 
-        console.log(`Processing file: ${file.name}`);
-
         const worker = workers[i % workerN]; // Select worker in round-robin fashion
 
         const { data } = await worker.recognize(file);
@@ -95,15 +93,13 @@
           }))
         };
 
-        console.log(`File ${file.name} processed. Word count: ${data.words.length}`);
+        console.log(imageInfo);
 
         allData.push(imageInfo); // Collect image info for each file
 
         if (allData.length === files.length) {
           // All files processed, write to JSON file
-          console.log('All files processed. Writing to JSON file...');
-
-          const jsonContent = JSON.stringify(allData, null, 2);
+          console.log('Writing to JSON file...');
 
           download(jsonContent, 'word_data.json', 'application/json', (progressEvent) => {
             // Log real-time byte writing progress
@@ -111,8 +107,6 @@
             const totalBytes = progressEvent.total;
             console.log(`Progress: ${bytesWritten} bytes / ${totalBytes} bytes`);
           });
-
-          console.log('JSON file writing complete.');
         }
       };
 
