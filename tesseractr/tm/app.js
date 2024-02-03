@@ -21,7 +21,7 @@ async function processImages() {
 
     const workerGen = async () => {
       console.log('Creating a worker.');
-      const worker = await createWorker("hin", 1, { logger: m => { console.log(m) }, cachePath: "." });
+      const worker = await createWorker("hin", 1,{ cachePath: "." });
       scheduler.addWorker(worker);
     }
 
