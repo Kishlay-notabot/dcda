@@ -44,45 +44,74 @@
           logger: function(m){console.log(m);}
         });
         scheduler.addWorker(worker);
+        return worker;
       }
 
       const workerN = 4;
+      const workers = [];
+
       (async () => {
-        const resArr = Array(workerN);
         for (let i=0; i<workerN; i++) {
-          resArr[i] = await workerGen();
+          workers.push(await workerGen());
         }
       })();
 
-      const recognize = async function(evt){
-        const files = evt.target.files;
-        const imageGrid = document.getElementById('imageGrid');
-        imageGrid.innerHTML = '';
+      // ...
 
-        for (let i=0; i<files.length; i++) {
-          const file = files[i];
-          const reader = new FileReader();
+const recognize = async function(evt){
+  const files = evt.target.files;
+  const imageGrid = document.getElementById('imageGrid');
+  imageGrid.innerHTML = '';
 
-          reader.onload = async function(e) {
-            const thumbnailContainer = document.createElement('div');
-            thumbnailContainer.classList.add('thumbnail');
+  const allData = []; // Array to store data.words for all files
 
-            const thumbnailImage = document.createElement('img');
-            thumbnailImage.src = e.target.result;
+  for (let i=0; i<files.length; i++) {
+    const file = files[i];
+    const reader = new FileReader();
 
-            thumbnailContainer.appendChild(thumbnailImage);
-            imageGrid.appendChild(thumbnailContainer);
+    reader.onload = async function(e) {
+      const thumbnailContainer = document.createElement('div');
+      thumbnailContainer.classList.add('thumbnail');
 
-            const { data } = await scheduler.addJob('recognize', file);
-            console.log(data.words); // Output word-level data to the console
-          };
+      const thumbnailImage = document.createElement('img');
+      thumbnailImage.src = e.target.result;
 
-          reader.readAsDataURL(file);
-        }
+      thumbnailContainer.appendChild(thumbnailImage);
+      imageGrid.appendChild(thumbnailContainer);
+
+      const worker = workers[i % workerN]; // Select worker in round-robin fashion
+
+      const { data } = await worker.recognize(file); // Use recognize instead of addJob
+      console.log(data.words); // Output word-level data to the console
+
+      allData.push(data.words); // Collect data.words for each file
+
+      if (allData.length === files.length) {
+        // All files processed, write to JSON file
+        const jsonContent = JSON.stringify(allData, null, 2);
+        download(jsonContent, 'word_data.json', 'application/json');
       }
+    };
+
+    reader.readAsDataURL(file);
+  }
+}
+
+// ...
+
 
       const elm = document.getElementById('uploader');
       elm.addEventListener('change', recognize);
+
+      // Function to trigger download of JSON file
+      function download(content, filename, contentType) {
+        const a = document.createElement('a');
+        const blob = new Blob([content], { type: contentType });
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
     </script>
   </body>
 </html>
