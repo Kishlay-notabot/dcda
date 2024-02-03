@@ -21,7 +21,7 @@ const scheduler = createScheduler();
 
 // Creates worker and adds to scheduler
 const workerGen = async () => {
-  const worker = await createWorker("hin", 1, {cachePath: "."});
+  const worker = await createWorker("hin", 1, { logger:m => {console.log(m)},cachePath: "."});
   scheduler.addWorker(worker);
 }
 
