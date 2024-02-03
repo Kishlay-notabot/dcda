@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 
-const imageFolder = path.resolve(__dirname, './img');
+const imageFolder = path.resolve(__dirname, './testing');
 const imageArr = fs.readdirSync(imageFolder)
   .filter(file => /\.(jpg|jpeg|png)$/i.test(file))
   .map(file => path.resolve(imageFolder, file));
