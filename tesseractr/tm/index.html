@@ -36,128 +36,121 @@
     <input type="file" id="uploader" multiple>
     <div id="imageGrid"></div>
 
-<script type="module">
-  const scheduler = Tesseract.createScheduler();
+    <script type="module">
+      const scheduler = Tesseract.createScheduler();
 
-  const workerGen = async () => {
-    const worker = await Tesseract.createWorker("hin", 1, {
-      corePath: '../../node_modules/tesseract.js-core',
-      workerPath: "/dist/worker.min.js",
-      logger: function(m){console.log(m);}
-    });
-    scheduler.addWorker(worker);
-    return worker;
-  }
+      const workerGen = async () => {
+        const worker = await Tesseract.createWorker("hin", 1, {
+          corePath: '../../node_modules/tesseract.js-core',
+          workerPath: "/dist/worker.min.js",
+          logger: function(m){console.log(m);}
+        });
+        scheduler.addWorker(worker);
+        return worker;
+      }
 
-  const workerN = 10;
-  const workers = [];
+      const workerN = 10;
+      const workers = await Promise.all(Array.from({ length: workerN }, workerGen));
 
-  (async () => {
-    for (let i=0; i<workerN; i++) {
-      workers.push(await workerGen());
-    }
-  })();
+      const visitedObjects = new WeakSet();
 
-  const visitedObjects = new WeakSet();
+      const recognize = async function(evt){
+        const files = evt.target.files;
+        const imageGrid = document.getElementById('imageGrid');
+        imageGrid.innerHTML = '';
 
-  const recognize = async function(evt){
-    const files = evt.target.files;
-    const imageGrid = document.getElementById('imageGrid');
-    imageGrid.innerHTML = '';
+        const allData = []; // Array to store word bboxes and image names
 
-    const allData = []; // Array to store word bboxes and image names
+        for (let i=0; i<files.length; i++) {
+          const file = files[i];
+          const reader = new FileReader();
 
-    for (let i=0; i<files.length; i++) {
-      const file = files[i];
-      const reader = new FileReader();
+          reader.onload = async function(e) {
+            const thumbnailContainer = document.createElement('div');
+            thumbnailContainer.classList.add('thumbnail');
 
-      reader.onload = async function(e) {
-        const thumbnailContainer = document.createElement('div');
-        thumbnailContainer.classList.add('thumbnail');
+            const thumbnailImage = document.createElement('img');
+            thumbnailImage.src = e.target.result;
 
-        const thumbnailImage = document.createElement('img');
-        thumbnailImage.src = e.target.result;
+            thumbnailContainer.appendChild(thumbnailImage);
+            imageGrid.appendChild(thumbnailContainer);
 
-        thumbnailContainer.appendChild(thumbnailImage);
-        imageGrid.appendChild(thumbnailContainer);
+            console.log(`Processing file: ${file.name}`);
 
-        console.log(`Processing file: ${file.name}`);
+            const worker = workers[i % workerN]; // Select worker in round-robin fashion
 
-        const worker = workers[i % workerN]; // Select worker in round-robin fashion
+            const { data } = await worker.recognize(file);
 
-        const { data } = await worker.recognize(file);
+            const imageInfo = {
+              imageName: file.name,
+              words: data.words.map(word => ({
+                text: word.text,
+                bbox: word.bbox
+              }))
+            };
 
-        const imageInfo = {
-          imageName: file.name,
-          words: data.words.map(word => ({
-            text: word.text,
-            bbox: word.bbox
-          }))
+            console.log(`File ${file.name} processed. Word count: ${data.words.length}`);
+
+            allData.push(imageInfo); // Collect image info for each file
+
+            if (allData.length === files.length) {
+              // All files processed, write to JSON file
+              console.log('All files processed. Writing to JSON file...');
+
+              const jsonContent = JSON.stringify(allData, null, 2);
+
+              download(jsonContent, 'word_data.json', 'application/json', (progressEvent) => {
+                // Log real-time byte writing progress
+                const bytesWritten = progressEvent.loaded;
+                const totalBytes = progressEvent.total;
+                console.log(`Progress: ${bytesWritten} bytes / ${totalBytes} bytes`);
+              });
+
+              console.log('JSON file writing complete.');
+            }
+          };
+
+          reader.readAsDataURL(file);
+        }
+      }
+
+      const elm = document.getElementById('uploader');
+      elm.addEventListener('change', recognize);
+
+      // Function to trigger download of JSON file with real-time progress logging
+      function download(content, filename, contentType, progressCallback) {
+        const blob = new Blob([content], { type: contentType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+
+        // Use XMLHttpRequest to monitor real-time progress
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'blob';
+
+        xhr.onprogress = function (e) {
+          if (progressCallback) {
+            progressCallback(e);
+          }
         };
 
-        console.log(`File ${file.name} processed. Word count: ${data.words.length}`);
+        xhr.onload = function () {
+          const downloadedBlob = new Blob([xhr.response], { type: contentType });
+          const downloadedUrl = URL.createObjectURL(downloadedBlob);
 
-        allData.push(imageInfo); // Collect image info for each file
+          a.href = downloadedUrl;
+          a.click();
 
-        if (allData.length === files.length) {
-          // All files processed, write to JSON file
-          console.log('All files processed. Writing to JSON file...');
+          console.log('Download initiated. Please check your browser downloads.');
 
-          const jsonContent = JSON.stringify(allData, null, 2);
+          URL.revokeObjectURL(downloadedUrl);
+          URL.revokeObjectURL(url);
+        };
 
-          download(jsonContent, 'word_data.json', 'application/json', (progressEvent) => {
-            // Log real-time byte writing progress
-            const bytesWritten = progressEvent.loaded;
-            const totalBytes = progressEvent.total;
-            console.log(`Progress: ${bytesWritten} bytes / ${totalBytes} bytes`);
-          });
-
-          console.log('JSON file writing complete.');
-        }
-      };
-
-      reader.readAsDataURL(file);
-    }
-  }
-
-  const elm = document.getElementById('uploader');
-  elm.addEventListener('change', recognize);
-
-  // Function to trigger download of JSON file with real-time progress logging
-  function download(content, filename, contentType, progressCallback) {
-    const blob = new Blob([content], { type: contentType });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-
-    // Use XMLHttpRequest to monitor real-time progress
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.responseType = 'blob';
-
-    xhr.onprogress = function (e) {
-      if (progressCallback) {
-        progressCallback(e);
+        xhr.send();
       }
-    };
-
-    xhr.onload = function () {
-      const downloadedBlob = new Blob([xhr.response], { type: contentType });
-      const downloadedUrl = URL.createObjectURL(downloadedBlob);
-
-      a.href = downloadedUrl;
-      a.click();
-
-      console.log('Download initiated. Please check your browser downloads.');
-
-      URL.revokeObjectURL(downloadedUrl);
-      URL.revokeObjectURL(url);
-    };
-
-    xhr.send();
-  }
-</script>
-
+    </script>
   </body>
 </html>
