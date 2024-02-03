@@ -83,7 +83,8 @@
 
         console.log(`Processing file: ${file.name}`);
 
-        const worker = workers[i % workerN]; // Select worker in round-robin fashion
+        const worker = workers[i % workers.length];
+ // Select worker in round-robin fashion
 
         const { data } = await worker.recognize(file);
 
