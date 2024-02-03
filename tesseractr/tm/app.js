@@ -4,7 +4,15 @@ const [,, imagePath] = process.argv;
 
 // Note: This example recognizes the same image 4 times in parallel 
 // to show how schedulers can be used to speed up bulk jobs.
-// In actual use you would (obviously) not want to run multiple identical jobs. 
+// In actual use you would (obviously) not want to run multiple identical jobs.
+
+
+                // /   = Root directory
+                // .   = This location
+                // ..  = Up a directory
+                // ./  = Current directory
+                // ../ = Parent of current directory
+                // ../../ = Two directories backwards
 
 const image = path.resolve(__dirname, (imagePath || '../tss.jpg'));
 const imageArr = [image];
