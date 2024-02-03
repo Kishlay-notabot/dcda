@@ -21,7 +21,7 @@ async function processImages() {
 
     const workerGen = async () => {
       console.log('Creating a worker.');
-      const worker = await createWorker("hin", 1,{ cachePath: "." });
+      const worker = await createWorker("hin", 1, { cachePath: "." });
       scheduler.addWorker(worker);
     }
 
@@ -51,6 +51,8 @@ async function processImages() {
         })),
       };
       results.push(result);
+
+      console.log(`Processing of image ${i + 1}/${imageArr.length} complete.`);
     }
 
     await scheduler.terminate(); //terminate workers
