@@ -65,7 +65,7 @@
     const imageGrid = document.getElementById('imageGrid');
     imageGrid.innerHTML = '';
 
-    const allData = []; // Array to store word bboxes and image names
+    const allData = []; // Array to store word bboxes, confidence, and image names
 
     for (let i=0; i<files.length; i++) {
       const file = files[i];
@@ -91,7 +91,8 @@
           imageName: file.name,
           words: data.words.map(word => ({
             text: word.text,
-            bbox: word.bbox
+            bbox: word.bbox,
+            confidence: word.confidence // Include confidence value
           }))
         };
 
