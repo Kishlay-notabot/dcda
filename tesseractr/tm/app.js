@@ -21,11 +21,11 @@ async function processImages() {
 
     const workerGen = async () => {
       console.log('Creating a worker.');
-      const worker = await createWorker("hin", 1, { cachePath: "." });
+      const worker = await createWorker("hin", 1, { logger:m => {console.log(m)} ,cachePath: "." });
       scheduler.addWorker(worker);
     }
 
-    const workerN = 2;
+    const workerN = 7;
 
     console.log(`Creating ${workerN} workers.`);
     const resArr = Array(workerN);
