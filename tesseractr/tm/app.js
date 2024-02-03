@@ -1,4 +1,4 @@
-const { createWorker, createScheduler } = require('../../');
+const { createWorker, createScheduler } = require('tesseract.js');
 const path = require('path');
 const [,, imagePath] = process.argv;
 
@@ -6,14 +6,14 @@ const [,, imagePath] = process.argv;
 // to show how schedulers can be used to speed up bulk jobs.
 // In actual use you would (obviously) not want to run multiple identical jobs. 
 
-const image = path.resolve(__dirname, (imagePath || '../../tests/assets/images/cosmic.png'));
-const imageArr = [image, image, image, image];
+const image = path.resolve(__dirname, (imagePath || '../tss.jpg'));
+const imageArr = [image];
 
 const scheduler = createScheduler();
 
 // Creates worker and adds to scheduler
 const workerGen = async () => {
-  const worker = await createWorker("eng", 1, {cachePath: "."});
+  const worker = await createWorker("hin", 1, {cachePath: "."});
   scheduler.addWorker(worker);
 }
 
