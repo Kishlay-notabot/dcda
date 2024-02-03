@@ -1,19 +1,19 @@
 const { createWorker, createScheduler } = require('tesseract.js');
 const path = require('path');
-const imageArr = [
-  path.resolve(__dirname, '../tss.jpg')
+const fs = require('fs');
 
-  // ... add more image paths here
-];
+const folderPath = path.resolve(__dirname, './testing'); // Specify the folder path
+const imageArr = fs.readdirSync(folderPath).map(file => path.join(folderPath, file));
 
 const scheduler = createScheduler();
-// workers
+
 const workerGen = async () => {
   const worker = await createWorker("hin", 1, { logger: m => { console.log(m) }, cachePath: "." });
   scheduler.addWorker(worker);
 }
 
 const workerN = 4;
+
 (async () => {
   const resArr = Array(workerN);
   for (let i = 0; i < workerN; i++) {
