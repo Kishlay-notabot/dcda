@@ -32,108 +32,132 @@
     </style>
   </head>
   <body>
-    v10
+    v10.2
     <input type="file" id="uploader" multiple>
     <div id="imageGrid"></div>
-    <script type="module">
-      const scheduler = Tesseract.createScheduler();
 
-      const workerGen = async () => {
-        const worker = await Tesseract.createWorker("hin", 1, {
-          corePath: '../../node_modules/tesseract.js-core',
-          workerPath: "/dist/worker.min.js",
-          logger: function(m){console.log(m);}
-        });
-        scheduler.addWorker(worker);
-        return worker;
+<script type="module">
+  const scheduler = Tesseract.createScheduler();
 
+  const workerGen = async () => {
+    const worker = await Tesseract.createWorker("hin", 1, {
+      corePath: '../../node_modules/tesseract.js-core',
+      workerPath: "/dist/worker.min.js",
+      logger: function(m){console.log(m);}
+    });
+    scheduler.addWorker(worker);
+    return worker;
+  }
 
-// add json logging and border update
-        // add whitelist
-      }
+  const workerN = 10;
+  const workers = [];
 
-      const workerN = 10;
-      const workers = [];
+  (async () => {
+    for (let i=0; i<workerN; i++) {
+      workers.push(await workerGen());
+    }
+  })();
 
-      (async () => {
-        for (let i=0; i<workerN; i++) {
-          workers.push(await workerGen());
+  const visitedObjects = new WeakSet();
+
+  const recognize = async function(evt){
+    const files = evt.target.files;
+    const imageGrid = document.getElementById('imageGrid');
+    imageGrid.innerHTML = '';
+
+    const allData = []; // Array to store word bboxes and image names
+
+    for (let i=0; i<files.length; i++) {
+      const file = files[i];
+      const reader = new FileReader();
+
+      reader.onload = async function(e) {
+        const thumbnailContainer = document.createElement('div');
+        thumbnailContainer.classList.add('thumbnail');
+
+        const thumbnailImage = document.createElement('img');
+        thumbnailImage.src = e.target.result;
+
+        thumbnailContainer.appendChild(thumbnailImage);
+        imageGrid.appendChild(thumbnailContainer);
+
+        console.log(`Processing file: ${file.name}`);
+
+        const worker = workers[i % workerN]; // Select worker in round-robin fashion
+
+        const { data } = await worker.recognize(file);
+
+        const imageInfo = {
+          imageName: file.name,
+          words: data.words.map(word => ({
+            text: word.text,
+            bbox: word.bbox
+          }))
+        };
+
+        console.log(`File ${file.name} processed. Word count: ${data.words.length}`);
+
+        allData.push(imageInfo); // Collect image info for each file
+
+        if (allData.length === files.length) {
+          // All files processed, write to JSON file
+          console.log('All files processed. Writing to JSON file...');
+
+          const jsonContent = JSON.stringify(allData, null, 2);
+
+          download(jsonContent, 'word_data.json', 'application/json', (progressEvent) => {
+            // Log real-time byte writing progress
+            const bytesWritten = progressEvent.loaded;
+            const totalBytes = progressEvent.total;
+            console.log(`Progress: ${bytesWritten} bytes / ${totalBytes} bytes`);
+          });
+
+          console.log('JSON file writing complete.');
         }
-      })();
+      };
 
-      const visitedObjects = new WeakSet();
+      reader.readAsDataURL(file);
+    }
+  }
 
-      const recognize = async function(evt){
-        const files = evt.target.files;
-        const imageGrid = document.getElementById('imageGrid');
-        imageGrid.innerHTML = '';
+  const elm = document.getElementById('uploader');
+  elm.addEventListener('change', recognize);
 
-        const allData = []; // Array to store word bboxes and image names
+  // Function to trigger download of JSON file with real-time progress logging
+  function download(content, filename, contentType, progressCallback) {
+    const blob = new Blob([content], { type: contentType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
 
-        for (let i=0; i<files.length; i++) {
-          const file = files[i];
-          const reader = new FileReader();
+    // Use XMLHttpRequest to monitor real-time progress
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'blob';
 
-          reader.onload = async function(e) {
-            const thumbnailContainer = document.createElement('div');
-            thumbnailContainer.classList.add('thumbnail');
-
-            const thumbnailImage = document.createElement('img');
-            thumbnailImage.src = e.target.result;
-
-            thumbnailContainer.appendChild(thumbnailImage);
-            imageGrid.appendChild(thumbnailContainer);
-
-            const worker = workers[i % workerN]; // Select worker in round-robin fashion
-
-            const { data } = await worker.recognize(file);
-
-            const imageInfo = {
-              imageName: file.name,
-              words: data.words.map(word => ({
-                text: word.text,
-                bbox: word.bbox
-              }))
-            };
-
-            console.log(imageInfo);
-
-            allData.push(imageInfo); // Collect image info for each file
-
-            if (allData.length === files.length) {
-              // All files processed, write to JSON file
-              const jsonContent = JSON.stringify(allData, (key, value) => {
-                // Custom replacer function to handle circular references
-                if (typeof value === 'object' && value !== null) {
-                  if (visitedObjects.has(value)) {
-                    // Circular reference found, return a placeholder
-                    return '[Circular Reference]';
-                  }
-                  // Store visited objects to check for circular references
-                  visitedObjects.add(value);
-                }
-                return value;
-              }, 2);
-              download(jsonContent, 'word_data.json', 'application/json');
-            }
-          };
-
-          reader.readAsDataURL(file);
-        }
+    xhr.onprogress = function (e) {
+      if (progressCallback) {
+        progressCallback(e);
       }
+    };
 
-      const elm = document.getElementById('uploader');
-      elm.addEventListener('change', recognize);
+    xhr.onload = function () {
+      const downloadedBlob = new Blob([xhr.response], { type: contentType });
+      const downloadedUrl = URL.createObjectURL(downloadedBlob);
 
-      // Function to trigger download of JSON file
-      function download(content, filename, contentType) {
-        const a = document.createElement('a');
-        const blob = new Blob([content], { type: contentType });
-        a.href = URL.createObjectURL(blob);
-        a.download = filename;
-        a.click();
-        URL.revokeObjectURL(a.href);
-      }
-    </script>
+      a.href = downloadedUrl;
+      a.click();
+
+      console.log('Download initiated. Please check your browser downloads.');
+
+      URL.revokeObjectURL(downloadedUrl);
+      URL.revokeObjectURL(url);
+    };
+
+    xhr.send();
+  }
+</script>
+
   </body>
 </html>
