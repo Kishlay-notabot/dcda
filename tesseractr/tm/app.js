@@ -26,7 +26,7 @@ async function processImages() {
       scheduler.addWorker(worker);
     };
 
-    const workerN = 7; // Adjust worker pool size as needed
+    const workerN = 1; // Adjust worker pool size as needed
     await Promise.all(Array(workerN).fill(0).map(async () => await workerGen())); // Create workers concurrently
 
     // Process images in parallel
