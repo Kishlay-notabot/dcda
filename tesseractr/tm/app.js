@@ -69,4 +69,6 @@ async function processImages() {
 
 // save json file to testing dir
 
+// use'compress-archive * batchN.zip in /tm/testing dir
+
 processImages();
