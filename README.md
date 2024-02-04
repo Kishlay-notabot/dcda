@@ -8,10 +8,9 @@ Also read [ai.md](https://github.com/Kishlay-notabot/dcda/blob/main/tesseractr/d
 ---
 ## Outcomings  
 
-Legacy version of tessdata is very inaccurate  
----
+* Legacy version of tessdata is very inaccurate  
   
-Using a single worker to recognize a sample batch of images took 4 minutes and 30 seconds, while using the same sample batch and using 7 workers parallely completed the task in 1 minutes and 10 seconds, which is nearly 75% increase in speed.
+* Using a single worker to recognize a sample batch of images took 4 minutes and 30 seconds, while using the same sample batch and using 7 workers parallely completed the task in 1 minutes and 10 seconds, which is nearly 75% increase in speed.
 But also pointing out from the documentation that the individual recognition speed does not change with multiple workers, its just that the processes get executed parallelly.  
 <br>
   
