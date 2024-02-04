@@ -25,14 +25,19 @@ def process_images(input_folder, output_folder_gray, output_folder_binarized):
 
     for idx, image_file in enumerate(image_files, start=1):
         input_path = os.path.join(input_folder, image_file)
-        
+
+        # Rename images in numerical series
+        new_filename = f"{idx:04d}.png"
+        input_path_renamed = os.path.join(input_folder, new_filename)
+        os.rename(input_path, input_path_renamed)
+
         # Convert to grayscale and save
-        output_path_gray = os.path.join(output_folder_gray, f"{os.path.splitext(image_file)[0]}_gray.png")
-        convert_to_grayscale(input_path, output_path_gray)
+        output_path_gray = os.path.join(output_folder_gray, f"{os.path.splitext(new_filename)[0]}_gray.png")
+        convert_to_grayscale(input_path_renamed, output_path_gray)
         print(f"Processed image {idx}/{total_images} (Grayscale): {output_path_gray}")
 
         # Apply binarization and save
-        output_path_binarized = os.path.join(output_folder_binarized, f"{os.path.splitext(image_file)[0]}_binarized.png")
+        output_path_binarized = os.path.join(output_folder_binarized, f"{os.path.splitext(new_filename)[0]}_binarized.png")
         apply_binarization(output_path_gray, output_path_binarized)
         print(f"Processed image {idx}/{total_images} (Binarized): {output_path_binarized}")
 
