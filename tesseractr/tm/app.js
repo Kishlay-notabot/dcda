@@ -21,32 +21,30 @@ async function processImages() {
     // Create a scheduler and workers
     const scheduler = createScheduler();
 
-    const workerGen = async () => {
-      const worker = await createWorker("hin", 1, { logger: m => console.log(m), cachePath: "." });
+    const workerGen = async (index) => {
+      const worker = await createWorker("hin", 1, { logger: m => console.log(`[Worker ${index}] ${m}`), cachePath: "." });
       scheduler.addWorker(worker);
     };
 
     const workerN = 7; // Adjust worker pool size as needed
-    await Promise.all(Array(workerN).fill(0).map(async () => await workerGen())); // Create workers concurrently
+    await Promise.all(Array(workerN).fill(0).map(async (_, index) => await workerGen(index))); // Create workers concurrently
 
     // Process images in parallel
     console.log('Processing images and performing OCR:');
-    
+
     const jobPromises = imageArr.map(async (imagePath) => {
       console.log(`Scheduling image processing for: ${imagePath}`);
-      return scheduler.addJob('recognize', imagePath)
-        .then(out => ({
-          imageName: path.basename(imagePath),
-          words: out.data.words.map(word => ({
-            text: word.text,
-            confidence: word.confidence.toFixed(2),
-            bbox: word.bbox,
-          })),
-        }))
-        .catch(error => ({
-          imageName: path.basename(imagePath),
-          error: error.message,
-        }));
+      const out = await scheduler.addJob('recognize', imagePath);
+      console.log(`[Main] Processing completed for: ${imagePath}`);
+      
+      return {
+        imageName: path.basename(imagePath),
+        words: out.data.words.map(word => ({
+          text: word.text,
+          confidence: word.confidence.toFixed(2),
+          bbox: word.bbox,
+        })),
+      };
     });
 
     const results = await Promise.all(jobPromises);
