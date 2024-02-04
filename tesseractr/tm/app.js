@@ -6,6 +6,7 @@ async function processImages() {
   const folderPath = path.resolve(__dirname, './testing');
 
   try {
+    // Read image files from the specified folder
     console.log('Reading files from the specified folder:', folderPath);
     const files = await fs.readdir(folderPath);
 
@@ -17,32 +18,23 @@ async function processImages() {
 
     const imageArr = files.map(file => path.join(folderPath, file));
 
+    // Create a scheduler and workers
     const scheduler = createScheduler();
 
     const workerGen = async () => {
-      console.log('Creating a worker.');
-      const worker = await createWorker("hin", 1, { logger:m => {console.log(m)} ,cachePath: "." });
+      const worker = await createWorker("hin", 1, { logger: m => console.log(m), cachePath: "." });
       scheduler.addWorker(worker);
-    }
+    };
 
-    const workerN = 7;
+    const workerN = 7; // Adjust worker pool size as needed
+    await Promise.all(Array(workerN).fill(workerGen())); // Create workers concurrently
 
-    console.log(`Creating ${workerN} workers.`);
-    const resArr = Array(workerN);
-    for (let i = 0; i < workerN; i++) {
-      resArr[i] = workerGen();
-    }
-    await Promise.all(resArr);
-
+    // Process images in parallel
     console.log('Processing images and performing OCR:');
-
-    const results = [];
-
-    for (let i = 0; i < imageArr.length; i++) {
-      const imagePath = imageArr[i];
-      console.log(`Processing image ${i + 1}/${imageArr.length}: ${imagePath}`);
+    const results = await Promise.all(imageArr.map(async (imagePath) => {
+      console.log(`Processing image ${imageArr.indexOf(imagePath) + 1}/${imageArr.length}: ${imagePath}`);
       const out = await scheduler.addJob('recognize', imagePath);
-      const result = {
+      return {
         imageName: path.basename(imagePath),
         words: out.data.words.map(word => ({
           text: word.text,
@@ -50,16 +42,13 @@ async function processImages() {
           bbox: word.bbox,
         })),
       };
-      results.push(result);
+    }));
 
-      console.log(`Processing of image ${i + 1}/${imageArr.length} complete.`);
-    }
-
-    await scheduler.terminate(); //terminate workers
+    // Terminate workers and save results
+    await scheduler.terminate();
 
     console.log('OCR processing completed.');
 
-    // Save the results as a JSON file
     const jsonFilePath = path.resolve(__dirname, 'ocr_results.json');
     console.log('Exporting OCR results to JSON file:', jsonFilePath);
     await fs.writeFile(jsonFilePath, JSON.stringify(results, null, 2));
