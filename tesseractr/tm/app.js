@@ -56,7 +56,7 @@ async function processImages() {
 
     console.log('OCR processing completed.');
 
-    const jsonFilePath = path.resolve(__dirname, 'ocr_results.json');
+    const jsonFilePath = path.resolve(folderPath, 'ocr_results.json');
     console.log('Exporting OCR results to JSON file:', jsonFilePath);
     await fs.writeFile(jsonFilePath, JSON.stringify(results, null, 2));
 
@@ -65,5 +65,8 @@ async function processImages() {
     console.error('Error:', error.message);
   }
 }
+
+
+// save json file to testing dir
 
 processImages();
