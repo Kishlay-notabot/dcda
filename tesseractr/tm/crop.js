@@ -12,7 +12,8 @@ async function cropWordsFromImages(ocrResultsPath, outputFolder) {
     await fs.mkdir(outputFolderPath, { recursive: true });
 
     for (const result of ocrData) {
-      const imagePath = path.resolve(__dirname, 'testing', result.imageName);
+        const imagePath = path.resolve(__dirname, 'testing', 'tss.jpg');
+
 
       const image = await loadImage(imagePath);
 
@@ -24,7 +25,7 @@ async function cropWordsFromImages(ocrResultsPath, outputFolder) {
         const { bbox } = word;
 
         // Create a new canvas for the cropped word
-        const croppedCanvas = createCanvas(bbox.width, bbox.height);
+        const croppedCanvas = createCanvas(Number(bbox.width), Number(bbox.height));
         const croppedCtx = croppedCanvas.getContext('2d');
 
         croppedCtx.drawImage(canvas, bbox.x, bbox.y, bbox.width, bbox.height, 0, 0, bbox.width, bbox.height);
