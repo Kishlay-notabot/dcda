@@ -67,6 +67,8 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
             console.error(`Error loading image: ${imageName}`, loadError);
         }
     });
+
+    console.log(`Total number of words cropped: ${croppedWordCount} out of ${totalWordCount}`);
 }
 
 const jsonFilePath = 'ocr_results.json'; // Replace with your actual JSON file path
