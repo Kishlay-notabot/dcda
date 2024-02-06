@@ -8,3 +8,5 @@ worker.min.js
 .nyc_output
 dist/
 *.swp
+
+/tesseractr/tm/crp/output_images/*
