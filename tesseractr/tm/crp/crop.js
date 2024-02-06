@@ -9,19 +9,15 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
     let totalWordCount = 0;
     let croppedWordCount = 0;
 
+    // Create an array to store all the image processing promises
+    const imageProcessingPromises = [];
+
     jsonData.forEach(({ imageName, words }) => {
         console.log(`Processing image: ${imageName}`);
-        const imagePath = path.join(__dirname, imageName); 
+        const imagePath = path.join(__dirname, imageName);
 
         try {
-            const image = loadImage(imagePath);
-
-            // Handle image loading errors
-            image.catch((error) => {
-                console.error(`Error loading image: ${imageName}`, error);
-            });
-
-            image.then((image) => {
+            const imagePromise = loadImage(imagePath).then((image) => {
                 const imageFolderName = path.basename(imageName, path.extname(imageName));
                 const outputFolder = path.join(outputRootFolder, imageFolderName);
 
@@ -63,12 +59,17 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
 
                 console.log(`Finished processing image: ${imageName}`);
             });
+
+            imageProcessingPromises.push(imagePromise);
         } catch (loadError) {
             console.error(`Error loading image: ${imageName}`, loadError);
         }
     });
 
-    console.log(`Total number of words cropped: ${croppedWordCount} out of ${totalWordCount}`);
+    // Use Promise.all to wait for all image processing promises to resolve
+    Promise.all(imageProcessingPromises).then(() => {
+        console.log(`Total number of words cropped: ${croppedWordCount} out of ${totalWordCount}`);
+    });
 }
 
 const jsonFilePath = 'ocr_results.json'; // Replace with your actual JSON file path
