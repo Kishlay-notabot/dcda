@@ -18,6 +18,8 @@ function cropImagesFromJson(jsonFilePath, outputFolder) {
             words.forEach(({ text, bbox }) => {
                 totalWordCount++;
 
+                console.log(`Processing word: ${text}`);
+
                 const { x0, y0, x1, y1 } = bbox;
 
                 // Calculate width and height of the cropped region
@@ -32,7 +34,8 @@ function cropImagesFromJson(jsonFilePath, outputFolder) {
                 ctx.drawImage(image, x0, y0, width, height, 0, 0, width, height);
 
                 // Save the cropped image to the output folder
-                const outputFilePath = path.join(outputFolder, `${text}_${imageName}`);
+                const sanitizedText = text.replace(/[^a-zA-Z0-9]/g, '_');
+                const outputFilePath = path.join(outputFolder, `${sanitizedText}_${imageName}`);
                 const buffer = canvas.toBuffer('image/png');
                 fs.writeFileSync(outputFilePath, buffer);
 
