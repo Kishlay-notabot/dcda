@@ -11,9 +11,7 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
 
     jsonData.forEach(({ imageName, words }) => {
         console.log(`Processing image: ${imageName}`);
-
-        // Load the image
-        const imagePath = path.join(__dirname, imageName); // Assuming images are in the same directory as the script
+        const imagePath = path.join(__dirname, imageName); 
 
         try {
             const image = loadImage(imagePath);
@@ -32,7 +30,7 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
                     fs.mkdirSync(outputFolder);
                 }
 
-                words.forEach(({ text, bbox }) => {
+                words.forEach(({ text, bbox }, index) => {
                     totalWordCount++;
 
                     console.log(`Processing word: ${text}`);
@@ -52,7 +50,7 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
 
                     // Save the cropped image to the output folder
                     const sanitizedText = text.replace(/[^a-zA-Z0-9]/g, '_');
-                    const outputFilePath = path.join(outputFolder, `${sanitizedText}.png`);
+                    const outputFilePath = path.join(outputFolder, `${imageFolderName}_${index + 1}_${sanitizedText}.png`);
 
                     try {
                         fs.writeFileSync(outputFilePath, canvas.toBuffer('image/png'));
@@ -69,8 +67,6 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
             console.error(`Error loading image: ${imageName}`, loadError);
         }
     });
-
-    console.log(`Words cropped: ${croppedWordCount}/${totalWordCount}`);
 }
 
 const jsonFilePath = 'ocr_results.json'; // Replace with your actual JSON file path
