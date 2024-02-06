@@ -47,7 +47,7 @@ function cropImagesFromJson(jsonFilePath, outputFolder) {
     console.log(`Words cropped: ${croppedWordCount}/${totalWordCount}`);
 }
 
-const jsonFilePath = 'your_json_file.json'; // Replace with your actual JSON file path
+const jsonFilePath = 'ocr_results.json'; // Replace with your actual JSON file path
 const outputFolder = 'output_images'; // Replace with the desired output folder
 
 // Create the output folder if it doesn't exist
