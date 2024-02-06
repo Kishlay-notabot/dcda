@@ -26,7 +26,7 @@ async function processImages() {
       scheduler.addWorker(worker);
     };
 
-    const workerN = 1; // Adjust worker pool size as needed
+    const workerN = 7; // Adjust worker pool size as needed
     await Promise.all(Array(workerN).fill(0).map(async () => await workerGen())); // Create workers concurrently
 
     // Process images in parallel
@@ -56,7 +56,7 @@ async function processImages() {
 
     console.log('OCR processing completed.');
 
-    const jsonFilePath = path.resolve(folderPath, 'ocr_results.json');
+    const jsonFilePath = path.resolve(__dirname, 'ocr_results.json');
     console.log('Exporting OCR results to JSON file:', jsonFilePath);
     await fs.writeFile(jsonFilePath, JSON.stringify(results, null, 2));
 
@@ -66,9 +66,7 @@ async function processImages() {
   }
 }
 
-
 // save json file to testing dir
 
 // use'compress-archive * batchN.zip in /tm/testing dir
-
 processImages();
