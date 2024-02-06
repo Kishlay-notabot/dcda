@@ -1,40 +1,41 @@
 const { createCanvas, loadImage } = require('canvas');
 const fs = require('fs');
+const path = require('path');
 
-function drawRectanglesFromJson(jsonFilePath) {
+function cropImagesFromJson(jsonFilePath, outputFolder) {
     // Read the JSON file
     const jsonData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
 
     jsonData.forEach(({ imageName, words }) => {
-        // Create a canvas
-        const canvas = createCanvas();
-        const ctx = canvas.getContext('2d');
-
         // Load the image
         loadImage(imageName).then((image) => {
-            // Set canvas size to match the image size
-            canvas.width = image.width;
-            canvas.height = image.height;
-
-            // Draw the image on the canvas
-            ctx.drawImage(image, 0, 0);
-
-            // Draw rectangles based on the coordinates from JSON
-            words.forEach(({ bbox }) => {
+            words.forEach(({ text, bbox }) => {
                 const { x0, y0, x1, y1 } = bbox;
 
-                // Draw the rectangle
-                ctx.strokeStyle = 'red';
-                ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
-            });
+                // Calculate width and height of the cropped region
+                const width = x1 - x0;
+                const height = y1 - y0;
 
-            // Save the canvas as an image
-            const outputFilePath = `output_${imageName}`;
-            const buffer = canvas.toBuffer('image/png');
-            fs.writeFileSync(outputFilePath, buffer);
+                // Create a canvas for cropping
+                const canvas = createCanvas(width, height);
+                const ctx = canvas.getContext('2d');
+
+                // Crop the region from the original image
+                ctx.drawImage(image, x0, y0, width, height, 0, 0, width, height);
+
+                // Save the cropped image to the output folder
+                const outputFilePath = path.join(outputFolder, `${text}_${imageName}`);
+                const buffer = canvas.toBuffer('image/png');
+                fs.writeFileSync(outputFilePath, buffer);
+            });
         });
     });
 }
 
 const jsonFilePath = 'bbox_data.json'; // Replace with your actual JSON file path
-drawRectanglesFromJson(jsonFilePath);
+const outputFolder = 'output_images'; // Replace with the desired output folder
+if (!fs.existsSync(outputFolder)) {
+    fs.mkdirSync(outputFolder);
+}
+
+cropImagesFromJson(jsonFilePath, outputFolder);
