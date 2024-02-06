@@ -14,37 +14,52 @@ function cropImagesFromJson(jsonFilePath, outputFolder) {
 
         // Load the image
         const imagePath = path.join(__dirname, imageName); // Assuming images are in the same directory as the script
-        loadImage(imagePath).then((image) => {
-            words.forEach(({ text, bbox }) => {
-                totalWordCount++;
 
-                console.log(`Processing word: ${text}`);
+        try {
+            const image = loadImage(imagePath);
 
-                const { x0, y0, x1, y1 } = bbox;
-
-                // Calculate width and height of the cropped region
-                const width = x1 - x0;
-                const height = y1 - y0;
-
-                // Create a canvas for cropping
-                const canvas = createCanvas(width, height);
-                const ctx = canvas.getContext('2d');
-
-                // Crop the region from the original image
-                ctx.drawImage(image, x0, y0, width, height, 0, 0, width, height);
-
-                // Save the cropped image to the output folder
-                const sanitizedText = text.replace(/[^a-zA-Z0-9]/g, '_');
-                const outputFilePath = path.join(outputFolder, `${sanitizedText}_${imageName}`);
-                const buffer = canvas.toBuffer('image/png');
-                fs.writeFileSync(outputFilePath, buffer);
-
-                console.log(`Cropped and saved: ${outputFilePath}`);
-                croppedWordCount++;
+            // Handle image loading errors
+            image.catch((error) => {
+                console.error(`Error loading image: ${imageName}`, error);
             });
 
-            console.log(`Finished processing image: ${imageName}`);
-        });
+            image.then((image) => {
+                words.forEach(({ text, bbox }) => {
+                    totalWordCount++;
+
+                    console.log(`Processing word: ${text}`);
+
+                    const { x0, y0, x1, y1 } = bbox;
+
+                    // Calculate width and height of the cropped region
+                    const width = x1 - x0;
+                    const height = y1 - y0;
+
+                    // Create a canvas for cropping
+                    const canvas = createCanvas(width, height);
+                    const ctx = canvas.getContext('2d');
+
+                    // Crop the region from the original image
+                    ctx.drawImage(image, x0, y0, width, height, 0, 0, width, height);
+
+                    // Save the cropped image to the output folder
+                    const sanitizedText = text.replace(/[^a-zA-Z0-9]/g, '_');
+                    const outputFilePath = path.join(outputFolder, `${sanitizedText}_${imageName}`);
+                    
+                    try {
+                        fs.writeFileSync(outputFilePath, canvas.toBuffer('image/png'));
+                        console.log(`Cropped and saved: ${outputFilePath}`);
+                        croppedWordCount++;
+                    } catch (writeError) {
+                        console.error(`Error writing file: ${outputFilePath}`, writeError);
+                    }
+                });
+
+                console.log(`Finished processing image: ${imageName}`);
+            });
+        } catch (loadError) {
+            console.error(`Error loading image: ${imageName}`, loadError);
+        }
     });
 
     console.log(`Words cropped: ${croppedWordCount}/${totalWordCount}`);
