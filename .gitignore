@@ -11,3 +11,4 @@ dist/
 /node_modules/* 
 /tesseractr/nde/2-cropping_words/output_images/*
 node_modules
+/tesseractr/nde/db/*
