@@ -31,8 +31,6 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
                     console.log(`Processing word: ${text}`);
 
                     const { x0, y0, x1, y1 } = bbox;
-
-                    // Calculate width and height of the cropped region
                     const width = x1 - x0;
                     const height = y1 - y0;
 
@@ -78,6 +76,5 @@ const outputRootFolder = 'output_images'; // Replace with the desired root outpu
 if (!fs.existsSync(outputRootFolder)) {
     fs.mkdirSync(outputRootFolder);
 }
-
-// Call the function to crop images and log the process
+// word cropping and storing complete, crpv3
 cropImagesFromJson(jsonFilePath, outputRootFolder);
