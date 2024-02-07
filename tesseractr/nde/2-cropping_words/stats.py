@@ -4,11 +4,10 @@ from collections import Counter
 def calculate_image_statistics(folder_path):
     image_info_list = []
 
-    for filename in os.listdir(folder_path):
-        print(folder_path)
-        if filename.endswith(('.png', '.jpg', '.jpeg', '.gif')):
-            file_path = os.path.join(folder_path, filename)
-            file_size = os.path.getsize(file_path)
+    for entry in os.scandir(folder_path):
+        if entry.is_file() and entry.name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+            file_path = entry.path
+            file_size = entry.stat().st_size
 
             with open(file_path, 'rb') as f:
                 f.seek(163)
@@ -18,7 +17,7 @@ def calculate_image_statistics(folder_path):
                 width = (a[0] << 8) + a[1]
 
             image_info_list.append({
-                'filename': filename,
+                'filename': entry.name,
                 'file_size': file_size,
                 'width': width,
                 'height': height,
