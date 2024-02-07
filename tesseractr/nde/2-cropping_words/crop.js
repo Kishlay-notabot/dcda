@@ -20,7 +20,8 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
 
     jsonData.forEach(({ imageName, words }) => {
         console.log(`Processing image: ${imageName}`);
-        const imagePath = path.join(__dirname, imageName);
+        const imagePath = path.join(__dirname, 'input_images', imageName);
+
 
         try {
             const imagePromise = loadImage(imagePath).then((image) => {
