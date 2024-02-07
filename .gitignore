@@ -14,3 +14,5 @@ node_modules
 /tesseractr/nde/db/*
 /tesseractr/nde/0-preprocessing/input_images
 /tesseractr/nde/0-preprocessing/output_images
+/tesseractr/nde/1-OCR/testing
+/tesseractr/nde/2-cropping_words/input_images
