@@ -82,3 +82,40 @@ cropImagesFromJson(jsonFilePath, outputRootFolder);
 
 
 // add size filter, so that hyphen/dot/false detections do not get saved/ get saved to another folder [maybe limit coordinate size from json]
+
+
+// 20x44? 
+
+// words.forEach(({ text, bbox }, index) => {
+//     totalWordCount++;
+
+//     console.log(`Processing word: ${text}`);
+
+//     const { x0, y0, x1, y1 } = bbox;
+//     const width = x1 - x0;
+//     const height = y1 - y0;
+
+//     // Add a size filter (adjust the threshold as needed)
+//     if (width > 5 && height > 5) {
+//         // Create a canvas for cropping
+//         const canvas = createCanvas(width, height);
+//         const ctx = canvas.getContext('2d');
+
+//         // Crop the region from the original image
+//         ctx.drawImage(image, x0, y0, width, height, 0, 0, width, height);
+
+//         // Save the cropped image to the common output folder
+//         const sanitizedText = text.replace(/[^a-zA-Z0-9]/g, '_');
+//         const outputFilePath = path.join(commonOutputFolder, `${imageName}_${index + 1}_${sanitizedText}.png`);
+
+//         try {
+//             fs.writeFileSync(outputFilePath, canvas.toBuffer('image/png'));
+//             console.log(`Cropped and saved: ${outputFilePath}`);
+//             croppedWordCount++;
+//         } catch (writeError) {
+//             console.error(`Error writing file: ${outputFilePath}`, writeError);
+//         }
+//     } else {
+//         console.log(`Word skipped due to small size: ${text}`);
+//     }
+// });
