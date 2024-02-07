@@ -12,20 +12,18 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
     // Create an array to store all the image processing promises
     const imageProcessingPromises = [];
 
+    // Create a common folder for all the cropped word images
+    const commonOutputFolder = path.join(outputRootFolder, 'cropped_words');
+    if (!fs.existsSync(commonOutputFolder)) {
+        fs.mkdirSync(commonOutputFolder);
+    }
+
     jsonData.forEach(({ imageName, words }) => {
         console.log(`Processing image: ${imageName}`);
         const imagePath = path.join(__dirname, imageName);
 
         try {
             const imagePromise = loadImage(imagePath).then((image) => {
-                const imageFolderName = path.basename(imageName, path.extname(imageName));
-                const outputFolder = path.join(outputRootFolder, imageFolderName);
-
-                // Create the output folder if it doesn't exist
-                if (!fs.existsSync(outputFolder)) {
-                    fs.mkdirSync(outputFolder);
-                }
-
                 words.forEach(({ text, bbox }, index) => {
                     totalWordCount++;
 
@@ -44,9 +42,9 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
                     // Crop the region from the original image
                     ctx.drawImage(image, x0, y0, width, height, 0, 0, width, height);
 
-                    // Save the cropped image to the output folder
+                    // Save the cropped image to the common output folder
                     const sanitizedText = text.replace(/[^a-zA-Z0-9]/g, '_');
-                    const outputFilePath = path.join(outputFolder, `${imageFolderName}_${index + 1}_${sanitizedText}.png`);
+                    const outputFilePath = path.join(commonOutputFolder, `${imageName}_${index + 1}_${sanitizedText}.png`);
 
                     try {
                         fs.writeFileSync(outputFilePath, canvas.toBuffer('image/png'));
