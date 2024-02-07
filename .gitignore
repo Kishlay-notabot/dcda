@@ -8,5 +8,6 @@ worker.min.js
 .nyc_output
 dist/
 *.swp
-/node_modules/*
-/tesseractr/tm/crp/output_images/*
+/node_modules/* 
+/tesseractr/nde/2-cropping_words/output_images/*
+node_modules
