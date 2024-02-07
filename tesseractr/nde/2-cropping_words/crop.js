@@ -69,8 +69,8 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
     });
 }
 
-const jsonFilePath = 'ocr_results.json'; // Replace with your actual JSON file path
-const outputRootFolder = 'output_images'; // Replace with the desired root output folder
+const jsonFilePath = 'ocr_results.json'; 
+const outputRootFolder = 'output_images'; 
 
 // Create the root output folder if it doesn't exist
 if (!fs.existsSync(outputRootFolder)) {
@@ -78,3 +78,7 @@ if (!fs.existsSync(outputRootFolder)) {
 }
 // word cropping and storing complete, crpv3
 cropImagesFromJson(jsonFilePath, outputRootFolder);
+
+
+
+// add size filter, so that hyphen/dot/false detections do not get saved/ get saved to another folder [maybe limit coordinate size from json]

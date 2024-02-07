@@ -5,6 +5,7 @@ def calculate_image_statistics(folder_path):
     image_info_list = []
 
     for filename in os.listdir(folder_path):
+        print(folder_path)
         if filename.endswith(('.png', '.jpg', '.jpeg', '.gif')):
             file_path = os.path.join(folder_path, filename)
             file_size = os.path.getsize(file_path)
