@@ -18,6 +18,9 @@ async function processImages() {
 
     const imageArr = files.map(file => path.join(folderPath, file));
 
+    // Define a whitelist of allowed characters
+    const whitelist = new Set(['द']);
+
     // Create a scheduler and workers
     const scheduler = createScheduler();
 
@@ -31,17 +34,19 @@ async function processImages() {
 
     // Process images in parallel
     console.log('Processing images and performing OCR:');
-    
+
     const jobPromises = imageArr.map(async (imagePath) => {
       console.log(`Scheduling image processing for: ${imagePath}`);
       return scheduler.addJob('recognize', imagePath)
         .then(out => ({
           imageName: path.basename(imagePath),
-          symbols: out.data.symbols.map(symbol => ({
-            text: symbol.text,
-            confidence: symbol.confidence.toFixed(2),
-            bbox: symbol.bbox,
-          })),
+          symbols: out.data.symbols
+            .filter(symbol => whitelist.has(symbol.text.toLowerCase())) // Filter symbols based on the whitelist
+            .map(symbol => ({
+              text: symbol.text,
+              confidence: symbol.confidence.toFixed(2),
+              bbox: symbol.bbox,
+            })),
         }))
         .catch(error => ({
           imageName: path.basename(imagePath),
