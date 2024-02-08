@@ -18,8 +18,6 @@ async function processImages() {
 
     const imageArr = files.map(file => path.join(folderPath, file));
 
-    // Define a whitelist of allowed characters
-    const whitelist = new Set(['द']);
 
     // Create a scheduler and workers
     const scheduler = createScheduler();
