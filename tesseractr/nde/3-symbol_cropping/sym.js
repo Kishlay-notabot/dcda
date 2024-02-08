@@ -36,23 +36,22 @@ async function processImages() {
     console.log('Processing images and performing OCR:');
 
     const jobPromises = imageArr.map(async (imagePath) => {
-      console.log(`Scheduling image processing for: ${imagePath}`);
-      return scheduler.addJob('recognize', imagePath)
-        .then(out => ({
-          imageName: path.basename(imagePath),
-          symbols: out.data.symbols
-            .filter(symbol => whitelist.has(symbol.text.toLowerCase())) // Filter symbols based on the whitelist
-            .map(symbol => ({
+        console.log(`Scheduling image processing for: ${imagePath}`);
+        return scheduler.addJob('recognize', imagePath)
+          .then(out => ({
+            imageName: path.basename(imagePath),
+            symbols: out.data.symbols.map(symbol => ({
               text: symbol.text,
               confidence: symbol.confidence.toFixed(2),
               bbox: symbol.bbox,
             })),
-        }))
-        .catch(error => ({
-          imageName: path.basename(imagePath),
-          error: error.message,
-        }));
-    });
+          }))
+          .catch(error => ({
+            imageName: path.basename(imagePath),
+            error: error.message,
+          }));
+      });
+      
 
     const results = await Promise.all(jobPromises);
 
