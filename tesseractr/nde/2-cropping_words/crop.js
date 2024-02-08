@@ -34,7 +34,7 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
                     const width = x1 - x0;
                     const height = y1 - y0;
                 // size filter 
-                //try 20x20
+                //try 20x20 !!!
                     if (width > 5 && height > 5) {
                         const canvas = createCanvas(width, height);
                         const ctx = canvas.getContext('2d');
