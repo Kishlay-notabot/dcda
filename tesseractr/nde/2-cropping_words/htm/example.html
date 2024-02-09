@@ -13,11 +13,16 @@
     }
 
     body {
-            padding-top: 100px;
-            text-align: center;
-        }
+      padding-top: 100px;
+      text-align: center;
+    }
+
     img {
       width: 100%;
+    }
+
+    #result {
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -25,11 +30,14 @@
   <h1>Hi</h1>
   <h4>Crop out the characters in the image, with the tool below</h4>
   <div class="container">
-    
     <div>
       <img id="image" src="0001_gray.png_112_____.png" alt="Picture">
     </div>
+    <br>
+    <button id="cropButton" style="margin-left: auto; margin-right: auto;">Crop</button>
+
   </div>
+  <div id="result"></div>
   <script src="./dist/cropper.min.js"></script>
   <script>
     window.addEventListener('DOMContentLoaded', function () {
@@ -42,9 +50,12 @@
         scalable: false
       });
 
-      document.getElementById('replace').onclick = function () {
-        cropper.replace('../images/picture-2.jpg');
-      };
+      var cropButton = document.getElementById('cropButton');
+      cropButton.addEventListener('click', function () {
+        var croppedCanvas = cropper.getCroppedCanvas();
+        document.getElementById('result').innerHTML = '';
+        document.getElementById('result').appendChild(croppedCanvas);
+      });
     });
   </script>
 </body>
