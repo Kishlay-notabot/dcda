@@ -24,6 +24,7 @@
     #result {
       margin-top: 20px;
     }
+
     #custom-keyboard {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -44,7 +45,9 @@
       background-color: #ff6666;
       color: #fff;
     }
+
     #output-display {
+      display: none;
       margin-top: 20px;
       padding: 10px;
       border: 1px solid #ccc;
@@ -60,7 +63,6 @@
     </div>
     <br>
     <button id="cropButton" style="margin-left: auto; margin-right: auto;">Crop</button>
-
   </div>
   <div id="result"></div>
   <br>
@@ -101,8 +103,8 @@
     <div class="keyboard-key" id="delete-key" onclick="handleDelete()">Delete</div>
     <div class="keyboard-key" id="submit-key" onclick="handleSubmit()">Submit</div>
   </div>
-<br>
-<div id="output-display"></div>
+  <br>
+  <div id="output-display"></div>
   <script src="./dist/cropper.min.js"></script>
   <script>
     window.addEventListener('DOMContentLoaded', function () {
@@ -120,24 +122,29 @@
         var croppedCanvas = cropper.getCroppedCanvas();
         document.getElementById('result').innerHTML = '';
         document.getElementById('result').appendChild(croppedCanvas);
+
+        document.getElementById('output-display').style.display = 'block';
       });
     });
+
     function handleKey(value) {
       console.log('Key pressed:', value);
-      displayOutput(value)
+      displayOutput(value);
     }
 
     function handleDelete() {
       console.log('Delete key pressed');
-      clearOutput()
+      clearOutput();
     }
 
     function clearOutput() {
-    document.getElementById('output-display').innerText = '';
-  }
+      document.getElementById('output-display').innerText = '';
+    }
+
     function handleSubmit() {
       console.log('Submit key pressed');
     }
+
     function displayOutput(value) {
       document.getElementById('output-display').innerText = value;
     }
