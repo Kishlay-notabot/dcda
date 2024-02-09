@@ -8,11 +8,7 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
 
     let totalWordCount = 0;
     let croppedWordCount = 0;
-
-    // Create an array to store all the image processing promises
-    const imageProcessingPromises = [];
-
-    // Create a common folder for all the cropped word images
+    const imageProcessingPromises = []
     const commonOutputFolder = path.join(outputRootFolder, 'cropped_words');
     if (!fs.existsSync(commonOutputFolder)) {
         fs.mkdirSync(commonOutputFolder);
@@ -35,7 +31,7 @@ function cropImagesFromJson(jsonFilePath, outputRootFolder) {
                     const height = y1 - y0;
                 // size filter 
                 //try 20x20 !!!
-                    if (width > 5 && height > 5) {
+                    if (width > 20 && height > 20) {
                         const canvas = createCanvas(width, height);
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(image, x0, y0, width, height, 0, 0, width, height);
