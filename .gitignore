@@ -6,7 +6,6 @@ worker.min.js
 *.traineddata
 *.traineddata.gz
 .nyc_output
-dist/
 *.swp
 /node_modules/* 
 /tesseractr/nde/2-cropping_words/output_images/*
