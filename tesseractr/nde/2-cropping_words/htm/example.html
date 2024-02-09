@@ -24,6 +24,31 @@
     #result {
       margin-top: 20px;
     }
+    #custom-keyboard {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      max-width: 400px;
+      margin: 20px auto;
+    }
+
+    .keyboard-key {
+      padding: 10px;
+      text-align: center;
+      background-color: #e0e0e0;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+    #delete-key, #submit-key {
+      background-color: #ff6666;
+      color: #fff;
+    }
+    #output-display {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
 <body>
@@ -38,6 +63,46 @@
 
   </div>
   <div id="result"></div>
+  <br>
+  <div id="custom-keyboard">
+    <div class="keyboard-key" onclick="handleKey('क')">क</div>
+    <div class="keyboard-key" onclick="handleKey('ख')">ख</div>
+    <div class="keyboard-key" onclick="handleKey('ग')">ग</div>
+    <div class="keyboard-key" onclick="handleKey('घ')">घ</div>
+    <div class="keyboard-key" onclick="handleKey('ङ')">ङ</div>
+    <div class="keyboard-key" onclick="handleKey('च')">च</div>
+    <div class="keyboard-key" onclick="handleKey('छ')">छ</div>
+    <div class="keyboard-key" onclick="handleKey('ज')">ज</div>
+    <div class="keyboard-key" onclick="handleKey('झ')">झ</div>
+    <div class="keyboard-key" onclick="handleKey('ञ')">ञ</div>
+    <div class="keyboard-key" onclick="handleKey('ट')">ट</div>
+    <div class="keyboard-key" onclick="handleKey('ठ')">ठ</div>
+    <div class="keyboard-key" onclick="handleKey('ड')">ड</div>
+    <div class="keyboard-key" onclick="handleKey('ढ')">ढ</div>
+    <div class="keyboard-key" onclick="handleKey('ण')">ण</div>
+    <div class="keyboard-key" onclick="handleKey('त')">त</div>
+    <div class="keyboard-key" onclick="handleKey('थ')">थ</div>
+    <div class="keyboard-key" onclick="handleKey('द')">द</div>
+    <div class="keyboard-key" onclick="handleKey('ध')">ध</div>
+    <div class="keyboard-key" onclick="handleKey('न')">न</div>
+    <div class="keyboard-key" onclick="handleKey('प')">प</div>
+    <div class="keyboard-key" onclick="handleKey('फ')">फ</div>
+    <div class="keyboard-key" onclick="handleKey('ब')">ब</div>
+    <div class="keyboard-key" onclick="handleKey('भ')">भ</div>
+    <div class="keyboard-key" onclick="handleKey('म')">म</div>
+    <div class="keyboard-key" onclick="handleKey('य')">य</div>
+    <div class="keyboard-key" onclick="handleKey('र')">र</div>
+    <div class="keyboard-key" onclick="handleKey('ल')">ल</div>
+    <div class="keyboard-key" onclick="handleKey('व')">व</div>
+    <div class="keyboard-key" onclick="handleKey('श')">श</div>
+    <div class="keyboard-key" onclick="handleKey('ष')">ष</div>
+    <div class="keyboard-key" onclick="handleKey('स')">स</div>
+    <div class="keyboard-key" onclick="handleKey('ह')">ह</div>
+    <div class="keyboard-key" id="delete-key" onclick="handleDelete()">Delete</div>
+    <div class="keyboard-key" id="submit-key" onclick="handleSubmit()">Submit</div>
+  </div>
+<br>
+<div id="output-display"></div>
   <script src="./dist/cropper.min.js"></script>
   <script>
     window.addEventListener('DOMContentLoaded', function () {
@@ -57,6 +122,25 @@
         document.getElementById('result').appendChild(croppedCanvas);
       });
     });
+    function handleKey(value) {
+      console.log('Key pressed:', value);
+      displayOutput(value)
+    }
+
+    function handleDelete() {
+      console.log('Delete key pressed');
+      clearOutput()
+    }
+
+    function clearOutput() {
+    document.getElementById('output-display').innerText = '';
+  }
+    function handleSubmit() {
+      console.log('Submit key pressed');
+    }
+    function displayOutput(value) {
+      document.getElementById('output-display').innerText = value;
+    }
   </script>
 </body>
 </html>
