@@ -1,5 +1,4 @@
-const hindiAlphabet = 'क ख ग घ च छ ज झ ट ठ ड ढ ण त थ द ध न प फ ब भ म य र ल व श ष स ह'.split(' ');
-const whitelist = new Set(hindiAlphabet);
+
 
 const { createCanvas, loadImage } = require('canvas');
 const fs = require('fs');
@@ -28,8 +27,9 @@ function cropSymbolsFromJson(jsonFilePath, outputRootFolder) {
           const { x0, y0, x1, y1 } = bbox;
           const width = x1 - x0;
           const height = y1 - y0;
+          const aspectRatio = width / height;
 
-          if (width > 20 && height > 20 && whitelist.has(text)) {
+          if (width > 20 && height > 20 && Math.abs(aspectRatio - 1) < 3) {
             const canvas = createCanvas(width, height);
             const ctx = canvas.getContext('2d');
             ctx.drawImage(image, x0, y0, width, height, 0, 0, width, height);
@@ -44,7 +44,7 @@ function cropSymbolsFromJson(jsonFilePath, outputRootFolder) {
               console.error(`Error writing file: ${outputFilePath}`, writeError);
             }
           } else {
-            console.log(`Symbol skipped or not in whitelist: ${text}`);
+            console.log(`Symbol skipped: ${text}`);
           }
         });
 
