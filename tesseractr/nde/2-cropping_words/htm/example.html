@@ -54,6 +54,21 @@
       height: auto;
       text-align: center;
     }
+    .overlay-red{
+    position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(65, 63, 63, 0.8);
+      z-index: 2; /* Ensure it's above the keyboard */
+      color: white;
+      text-align: center;
+
+    }
+    .color-red{
+      position: relative;
+    }
   </style>
 </head>
 <body>
@@ -68,6 +83,8 @@
   </div>
   <div id="result"></div><div id="output-display">Drag and resize the rectangle to outline a single character from the image above and click the crop button.</div>
   <br>
+<div class="color-red">
+  <div class="overlay-red">Crop the image to proceed to next step</div>
   <div id="custom-keyboard">
     <div class="keyboard-key" onclick="handleKey('क')">क</div>
     <div class="keyboard-key" onclick="handleKey('ख')">ख</div>
@@ -105,6 +122,8 @@
     <div class="keyboard-key" id="delete-key" onclick="handleDelete()">Delete</div>
     <div class="keyboard-key" id="submit-key" onclick="handleSubmit()">Submit</div>
   </div>
+</div>
+
   <br>
   <script src="./dist/cropper.min.js"></script>
   <script>
