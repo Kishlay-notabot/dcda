@@ -47,12 +47,11 @@
     }
 
     #output-display {
-      display: none;
-      margin-top: 20px;
+      margin: 20px auto;
       padding: 10px;
       border: 1px solid #ccc;
-      width: 100px;
-      height: 100px;
+      width: 200px;
+      height: auto;
       text-align: center;
     }
   </style>
@@ -67,7 +66,7 @@
     <br>
     <button id="cropButton" style="margin-left: auto; margin-right: auto;">Crop</button>
   </div>
-  <div id="result"></div><div id="output-display">Choose which character is it from the keyboard below</div>
+  <div id="result"></div><div id="output-display">Drag and resize the rectangle to outline a single character from the image above and click the crop button.</div>
   <br>
   <div id="custom-keyboard">
     <div class="keyboard-key" onclick="handleKey('क')">क</div>
@@ -121,11 +120,10 @@
 
       var cropButton = document.getElementById('cropButton');
       cropButton.addEventListener('click', function () {
+        clearOutput()
         var croppedCanvas = cropper.getCroppedCanvas();
         document.getElementById('result').innerHTML = '';
         document.getElementById('result').appendChild(croppedCanvas);
-
-        document.getElementById('output-display').style.display = 'block';
       });
     });
 
