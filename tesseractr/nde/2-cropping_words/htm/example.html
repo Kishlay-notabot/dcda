@@ -67,7 +67,7 @@
     <br>
     <button id="cropButton" style="margin-left: auto; margin-right: auto;">Crop</button>
   </div>
-  <div id="result"></div>Add label:<div id="output-display"></div>
+  <div id="result"></div><div id="output-display">Choose which character is it from the keyboard below</div>
   <br>
   <div id="custom-keyboard">
     <div class="keyboard-key" onclick="handleKey('क')">क</div>
@@ -140,7 +140,7 @@
     }
 
     function clearOutput() {
-      document.getElementById('output-display').innerText = '';
+      document.getElementById('output-display').innerText = 'Choose which character is it from the keyboard below';
     }
 
     function handleSubmit() {
