@@ -15,6 +15,14 @@
     img {
       width: 100%;
     }
+
+    #resultContainer {
+      margin-top: 20px;
+    }
+
+    #resultImage {
+      width: 100%;
+    }
   </style>
 </head>
 <body>
@@ -26,6 +34,12 @@
     </div>
     <button id="cropButton">Crop</button>
   </div>
+
+  <div id="resultContainer">
+    <h2>Cropped Image with Blacked Out Area</h2>
+    <img id="resultImage" alt="Result Image" style="width:30%;">
+  </div>
+
   <script src="./dist/cropper.min.js"></script>
   <script>
     window.addEventListener('DOMContentLoaded', function () {
@@ -46,19 +60,19 @@
         // Create a canvas to render the cropped image
         var canvas = document.createElement('canvas');
         var context = canvas.getContext('2d');
-        canvas.width = croppedData.width;
-        canvas.height = croppedData.height;
+        canvas.width = image.width;
+        canvas.height = image.height;
 
-        // Draw the cropped image onto the canvas
-        context.drawImage(image, croppedData.x, croppedData.y, croppedData.width, croppedData.height, 0, 0, croppedData.width, croppedData.height);
+        // Draw the original image onto the canvas
+        context.drawImage(image, 0, 0);
 
-        // Create a new image element with the cropped image
-        var croppedImage = new Image();
-        croppedImage.src = canvas.toDataURL('image/png');
+        // Black out the cropped area
+        context.fillStyle = 'black';
+        context.fillRect(croppedData.x, croppedData.y, croppedData.width, croppedData.height);
 
-        // Append the cropped image to the container
-        var container = document.querySelector('.container');
-        container.appendChild(croppedImage);
+        // Create a new image element with the modified image
+        var resultImage = document.getElementById('resultImage');
+        resultImage.src = canvas.toDataURL('image/png');
       });
     });
   </script>
