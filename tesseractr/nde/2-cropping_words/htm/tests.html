@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inverse Cropped Image</title>
+  <style>
+    #originalImage, #inverseImage {
+      max-width: 100%;
+      max-height: 400px;
+      display: block;
+      margin: 10px auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <img id="originalImage" src="0001_gray.png_112_____.png" alt="Original Image">
+  <img id="inverseImage" alt="Inverse Cropped Image">
+  
+  <!-- Include Cropper.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+  <script>
+    // Initialize Cropper
+    const originalImage = document.getElementById('originalImage');
+    const cropper = new Cropper(originalImage, {
+      zoomable: false,
+      scalable: false,
+      cropBoxResizable: false,
+      autoCropArea: 1,
+      ready: function () {
+        // Example usage: Call this function when you want to display the inverse of the cropped image
+        displayInverseCroppedImage();
+      }
+    });
+
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const inverseImage = document.getElementById('inverseImage');
+
+    // Function to get the inverse of the cropped image and display it
+    function displayInverseCroppedImage() {
+      // Get the data of the cropped image
+      const croppedData = cropper.getData(true);
+
+      // Set canvas size based on the container size
+      canvas.width = croppedData.width;
+      canvas.height = croppedData.height;
+
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw the inverse of the cropped image on the canvas
+      ctx.drawImage(originalImage, croppedData.x, croppedData.y, croppedData.width, croppedData.height, 0, 0, croppedData.width, croppedData.height);
+
+      // Black out the cropped region
+      ctx.fillStyle = 'black';
+      ctx.fillRect(croppedData.x, croppedData.y, croppedData.width, croppedData.height);
+
+      // Set the inverse image source to the canvas data URL
+      inverseImage.src = canvas.toDataURL();
+    }
+  </script>
+</body>
+</html>
