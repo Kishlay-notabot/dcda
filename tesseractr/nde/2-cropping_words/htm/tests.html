@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inverse Cropped Image</title>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Cropper.js</title>
+  <link rel="stylesheet" href="dist/cropper.css">
   <style>
-    #originalImage, #inverseImage {
-      max-width: 100%;
-      max-height: 400px;
-      display: block;
-      margin: 10px auto;
+    .container {
+      margin: 20px auto;
+      max-width: 100px;
+    }
+
+    img {
+      width: 100%;
     }
   </style>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
-  <img id="originalImage" src="0001_gray.png_112_____.png" alt="Original Image">
-  <img id="inverseImage" alt="Inverse Cropped Image">
-  
-  <!-- Include Cropper.js library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
-
+  <div class="container">
+    <h1>Cropper with responsive container</h1>
+    <p></p>
+    <div>
+      <img id="image" src="0001_gray.png_112_____.png" alt="Picture">
+    </div>
+    <button id="cropButton">Crop</button>
+  </div>
+  <script src="./dist/cropper.min.js"></script>
   <script>
-    // Initialize Cropper
-    const originalImage = document.getElementById('originalImage');
-    const cropper = new Cropper(originalImage, {
-      zoomable: false,
-      scalable: false,
-      cropBoxResizable: false,
-      autoCropArea: 1,
-      ready: function () {
-        // Example usage: Call this function when you want to display the inverse of the cropped image
-        displayInverseCroppedImage();
-      }
+    window.addEventListener('DOMContentLoaded', function () {
+      var image = document.querySelector('#image');
+      var cropper = new Cropper(image, {
+        viewMode: 1,
+        movable: false,
+        zoomable: false,
+        rotatable: false,
+        scalable: false
+      });
+
+      var cropButton = document.getElementById('cropButton');
+      cropButton.addEventListener('click', function () {
+        // Get the cropped data
+        var croppedData = cropper.getData();
+
+        // Create a canvas to render the cropped image
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        canvas.width = croppedData.width;
+        canvas.height = croppedData.height;
+
+        // Draw the cropped image onto the canvas
+        context.drawImage(image, croppedData.x, croppedData.y, croppedData.width, croppedData.height, 0, 0, croppedData.width, croppedData.height);
+
+        // Create a new image element with the cropped image
+        var croppedImage = new Image();
+        croppedImage.src = canvas.toDataURL('image/png');
+
+        // Append the cropped image to the container
+        var container = document.querySelector('.container');
+        container.appendChild(croppedImage);
+      });
     });
-
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    const inverseImage = document.getElementById('inverseImage');
-
-    // Function to get the inverse of the cropped image and display it
-    function displayInverseCroppedImage() {
-      // Get the data of the cropped image
-      const croppedData = cropper.getData(true);
-
-      // Set canvas size based on the container size
-      canvas.width = croppedData.width;
-      canvas.height = croppedData.height;
-
-      // Clear the canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw the inverse of the cropped image on the canvas
-      ctx.drawImage(originalImage, croppedData.x, croppedData.y, croppedData.width, croppedData.height, 0, 0, croppedData.width, croppedData.height);
-
-      // Black out the cropped region
-      ctx.fillStyle = 'black';
-      ctx.fillRect(croppedData.x, croppedData.y, croppedData.width, croppedData.height);
-
-      // Set the inverse image source to the canvas data URL
-      inverseImage.src = canvas.toDataURL();
-    }
   </script>
 </body>
 </html>
