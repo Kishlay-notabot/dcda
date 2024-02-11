@@ -54,23 +54,14 @@
 
       var cropButton = document.getElementById('cropButton');
       cropButton.addEventListener('click', function () {
-        // Get the cropped data
         var croppedData = cropper.getData();
-
-        // Create a canvas to render the cropped image
         var canvas = document.createElement('canvas');
         var context = canvas.getContext('2d');
         canvas.width = image.width;
         canvas.height = image.height;
-
-        // Draw the original image onto the canvas
         context.drawImage(image, 0, 0);
-
-        // Black out the cropped area
         context.fillStyle = 'black';
         context.fillRect(croppedData.x, croppedData.y, croppedData.width, croppedData.height);
-
-        // Create a new image element with the modified image
         var resultImage = document.getElementById('resultImage');
         resultImage.src = canvas.toDataURL('image/png');
       });
