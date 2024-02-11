@@ -175,8 +175,6 @@
         var croppedCanvas = cropper.getCroppedCanvas();
         document.getElementById('result').innerHTML = '';
         document.getElementById('result').appendChild(croppedCanvas);
-        croppedCanvas.width = image.width;
-        croppedCanvas.height = image.height;
         var croppedData = cropper.getData();
         var canvas = document.createElement('canvas');
         var context = canvas.getContext('2d');
