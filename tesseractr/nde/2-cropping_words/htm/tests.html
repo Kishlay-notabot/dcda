@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cropper Example</title>
+
+    <!-- Include Cropper.js library -->
+    <script type="module" src="https://unpkg.com/cropperjs@next"></script>
+
+    <style>
+        /* Add CSS styles to fix container width and height */
+        cropper-canvas {
+            width: 512px;
+            height: 512px;
+        }
+button{
+        height: 20px;        
+}
+
+        /* Add styles for flex container */
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+
+    <script type="module">
+        // Define the CropperImage custom element
+        class CropperImage extends HTMLElement {}
+
+        // Define the CropperShade custom element
+        class CropperShade extends HTMLElement {}
+
+        // Define the CropperHandle custom element
+        class CropperHandle extends HTMLElement {}
+
+        // Define the CropperGrid custom element
+        class CropperGrid extends HTMLElement {}
+
+        // Define the CropperCrosshair custom element
+        class CropperCrosshair extends HTMLElement {}
+
+        // Define the CropperSelection custom element
+        class CropperSelection extends HTMLElement {}
+
+        // Define the CropperCanvas custom element
+        class CropperCanvas extends HTMLElement {}
+        
+
+        // Register the custom elements 
+
+    const cropperSelection2 = document.querySelector('#cropperSelection2');
+ 
+if (cropperSelection2) { 
+  cropperSelection2.$toCanvas({ 
+    beforeDraw: function (context) { 
+    }
+  }).then((canvas) => { 
+    console.log('Canvas generated:', canvas);
+  }).catch((error) => {
+    console.error('Error generating canvas:', error);
+  });
+} else {
+  console.error('cropper-selection element not found.');
+}
+    </script>
+</head>
+<body>
+    
+<div class="flex-container">
+        <cropper-canvas style="width: 512px; height: 512px;" background>
+            <cropper-image src="./defaultimage.png" alt="Picture"></cropper-image>
+            <cropper-shade hidden></cropper-shade>
+            <cropper-handle action="select" plain></cropper-handle>
+            <cropper-selection id="cropperSelection" x="20" y="20" width="40" height="40" movable resizable zoomable multiple keyboard>
+                <cropper-grid role="grid" covered></cropper-grid>
+                <cropper-crosshair centered></cropper-crosshair>
+                <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
+                <cropper-handle action="n-resize"></cropper-handle>
+                <cropper-handle action="e-resize"></cropper-handle>
+                <cropper-handle action="s-resize"></cropper-handle>
+                <cropper-handle action="w-resize"></cropper-handle>
+                <cropper-handle action="ne-resize"></cropper-handle>
+                <cropper-handle action="nw-resize"></cropper-handle>
+                <cropper-handle action="se-resize"></cropper-handle>
+                <cropper-handle action="sw-resize"></cropper-handle>
+            </cropper-selection>
+            <cropper-selection id="cropperSelection1" x="60" y="60" width="80" height="80" movable resizable zoomable multiple keyboard>
+                <cropper-grid role="grid" covered></cropper-grid>
+                <cropper-crosshair centered></cropper-crosshair>
+                <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
+                <cropper-handle action="n-resize"></cropper-handle>
+                <cropper-handle action="e-resize"></cropper-handle>
+                <cropper-handle action="s-resize"></cropper-handle>
+                <cropper-handle action="w-resize"></cropper-handle>
+                <cropper-handle action="ne-resize"></cropper-handle>
+                <cropper-handle action="nw-resize"></cropper-handle>
+                <cropper-handle action="se-resize"></cropper-handle>
+                <cropper-handle action="sw-resize"></cropper-handle>
+            </cropper-selection>
+            <cropper-selection id="cropperSelection2" x="140" y="140" width="120" height="120" movable resizable zoomable multiple keyboard>
+                <cropper-grid role="grid" covered></cropper-grid>
+                <cropper-crosshair centered></cropper-crosshair>
+                <cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>
+                <cropper-handle action="n-resize"></cropper-handle>
+                <cropper-handle action="e-resize"></cropper-handle>
+                <cropper-handle action="s-resize"></cropper-handle>
+                <cropper-handle action="w-resize"></cropper-handle>
+                <cropper-handle action="ne-resize"></cropper-handle>
+                <cropper-handle action="nw-resize"></cropper-handle>
+                <cropper-handle action="se-resize"></cropper-handle>
+                <cropper-handle action="sw-resize"></cropper-handle>
+            </cropper-selection>
+        </cropper-canvas>
+
+ 
+        <div id="croppedImagesContainer"></div>
+    </div>
+
+
+
+</body>
+</html>
