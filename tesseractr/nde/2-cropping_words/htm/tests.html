@@ -61,12 +61,10 @@ button{
                 console.error(`${cropperSelectionId} element not found.`);
             }
         }
-        document.getElementById('runButton').addEventListener('click', function () {
+        document.getElementById('downloadZipButton').addEventListener('click', function () {
             handleCropperSelection('cropperSelection');
             handleCropperSelection('cropperSelection1');
             handleCropperSelection('cropperSelection2');
-        });
-        document.getElementById('downloadZipButton').addEventListener('click', function () {
             // Generate and download the zip file
             zip.generateAsync({ type: 'blob' }).then((blob) => {
                 const zipFileName = 'cropped_images.zip';
@@ -129,8 +127,7 @@ button{
         </cropper-canvas>
 
  
-        <div id="croppedImagesContainer"></div>
-        <button id="runButton">Run CropperSelection</button>
+        <div id="croppedImagesContainer"></div> 
         <button id="downloadZipButton">Download Zip</button>
     </div>
 
