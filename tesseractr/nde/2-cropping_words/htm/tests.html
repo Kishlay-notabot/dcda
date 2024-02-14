@@ -49,8 +49,7 @@ button{
         
 
         // Register the custom elements 
-
-    const cropperSelection2 = document.querySelector('#cropperSelection2');
+ 
  
 
     function handleCropperSelection(cropperSelectionId) {
@@ -58,8 +57,7 @@ button{
 
             if (cropperSelection) {
                 cropperSelection.$toCanvas({
-                    beforeDraw: function (context) {
-                        // Custom logic before drawing the canvas
+                    beforeDraw: function (context) { 
                     }
                 }).then((canvas) => {
                     console.log(`Canvas generated for ${cropperSelectionId}:`, canvas);
