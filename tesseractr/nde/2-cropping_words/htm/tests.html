@@ -7,6 +7,7 @@
 
     <!-- Include Cropper.js library -->
     <script type="module" src="https://unpkg.com/cropperjs@next"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/jszip@3.6.0/dist/jszip.min.js"></script>
 
     <style>
         /* Add CSS styles to fix container width and height */
@@ -26,6 +27,7 @@ button{
     </style>
 
     <script type="module">
+        const zip = new JSZip()
         // Define the CropperImage custom element
         class CropperImage extends HTMLElement {}
 
@@ -34,23 +36,12 @@ button{
 
         // Define the CropperHandle custom element
         class CropperHandle extends HTMLElement {}
-
-        // Define the CropperGrid custom element
         class CropperGrid extends HTMLElement {}
-
-        // Define the CropperCrosshair custom element
         class CropperCrosshair extends HTMLElement {}
-
-        // Define the CropperSelection custom element
         class CropperSelection extends HTMLElement {}
 
-        // Define the CropperCanvas custom element
         class CropperCanvas extends HTMLElement {}
         
-
-        // Register the custom elements 
- 
- 
 
     function handleCropperSelection(cropperSelectionId) {
             const cropperSelection = document.querySelector(`#${cropperSelectionId}`);
@@ -61,6 +52,8 @@ button{
                     }
                 }).then((canvas) => {
                     console.log(`Canvas generated for ${cropperSelectionId}:`, canvas);
+                    const imageDataUrl = canvas.toDataURL();
+                    zip.file(`${cropperSelectionId}.png`, imageDataUrl.split(',')[1], { base64: true });
                 }).catch((error) => {
                     console.error(`Error generating canvas for ${cropperSelectionId}:`, error);
                 });
@@ -72,6 +65,18 @@ button{
             handleCropperSelection('cropperSelection');
             handleCropperSelection('cropperSelection1');
             handleCropperSelection('cropperSelection2');
+        });
+        document.getElementById('downloadZipButton').addEventListener('click', function () {
+            // Generate and download the zip file
+            zip.generateAsync({ type: 'blob' }).then((blob) => {
+                const zipFileName = 'cropped_images.zip';
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = zipFileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
         });
     </script>
 </head>
@@ -126,6 +131,7 @@ button{
  
         <div id="croppedImagesContainer"></div>
         <button id="runButton">Run CropperSelection</button>
+        <button id="downloadZipButton">Download Zip</button>
     </div>
 
 
