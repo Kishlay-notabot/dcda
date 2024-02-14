@@ -53,22 +53,25 @@ button{
     const cropperSelection2 = document.querySelector('#cropperSelection2');
  
 
-document.getElementById('runButton').addEventListener('click', function () {
-            const cropperSelection2 = document.querySelector('#cropperSelection2');
+    function handleCropperSelection(cropperSelectionId) {
+            const cropperSelection = document.querySelector(`#${cropperSelectionId}`);
 
-            if (cropperSelection2) {
-                cropperSelection2.$toCanvas({
+            if (cropperSelection) {
+                cropperSelection.$toCanvas({
                     beforeDraw: function (context) {
                         // Custom logic before drawing the canvas
                     }
                 }).then((canvas) => {
-                    console.log('Canvas generated:', canvas);
+                    console.log(`Canvas generated for ${cropperSelectionId}:`, canvas);
                 }).catch((error) => {
-                    console.error('Error generating canvas:', error);
+                    console.error(`Error generating canvas for ${cropperSelectionId}:`, error);
                 });
             } else {
-                console.error('cropper-selection element not found.');
+                console.error(`${cropperSelectionId} element not found.`);
             }
+        }
+        document.getElementById('runButton').addEventListener('click', function () {
+            handleCropperSelection('cropperSelection2');
         });
     </script>
 </head>
