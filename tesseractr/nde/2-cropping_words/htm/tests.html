@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cropper Example</title>
-
-    <!-- Include Cropper.js library -->
+    <title>Cropper Example</title> 
     <script type="module" src="https://unpkg.com/cropperjs@next"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/jszip@3.6.0/dist/jszip.min.js"></script>
 
-    <style>
-        /* Add CSS styles to fix container width and height */
+    <style> 
         cropper-canvas {
             width: 512px;
             height: 512px;
@@ -18,8 +15,7 @@
 button{
         height: 20px;        
 }
-
-        /* Add styles for flex container */
+ 
         .flex-container {
             display: flex;
             justify-content: space-between;
@@ -27,14 +23,9 @@ button{
     </style>
 
     <script type="module">
-        const zip = new JSZip()
-        // Define the CropperImage custom element
-        class CropperImage extends HTMLElement {}
-
-        // Define the CropperShade custom element
-        class CropperShade extends HTMLElement {}
-
-        // Define the CropperHandle custom element
+        const zip = new JSZip() 
+        class CropperImage extends HTMLElement {} 
+        class CropperShade extends HTMLElement {} 
         class CropperHandle extends HTMLElement {}
         class CropperGrid extends HTMLElement {}
         class CropperCrosshair extends HTMLElement {}
