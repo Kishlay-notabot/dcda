@@ -14,8 +14,9 @@ This idea originated due to the absence of large datasets on the internet availa
 Before starting this project, I conducted thorough research on existing handwritten character datasets for the Devanagari script. And the biggest Dataset I found was the **Devanagari Handwritten Character Dataset**. Upon reading the paper thoroughly and contacting the authors, I was given very valuable suggestions from Professor Prashnna, who was the one of the authors of the currently largest available dataset which contains 92,000 images.
 The paper was published in 2015, and that time, the authors collected the data and they had to manually process and crop out the individual characters from the recieved data.   
 
-***My project has eliminated all the physical human intervention and narrowed it down to a remotely accesible webpage, which takes minimal human input in form of just some simple clicks, which help in the concatenation of the dataset.***
+***My project has eliminated all the physical human intervention and narrowed it down to a remotely accesible webpage, which takes minimal human input in form of just some simple clicks (literally just 2-3 clicks), which help in the concatenation of the dataset.***
 
+This is my contribution to promote the digitization of my language Hindi and the Devanagari script for democratization and better usage of OCR. 
 
 
 ## How?
