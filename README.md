@@ -14,7 +14,7 @@ This idea originated due to the absence of large datasets on the internet availa
 Before starting this project, I conducted thorough research on existing handwritten character datasets for the Devanagari script. And the biggest Dataset I found was the **Devanagari Handwritten Character Dataset**. Upon reading the paper thoroughly and contacting the authors, I was given very valuable suggestions from Professor Prashnna, who was the one of the authors of the currently largest available dataset which contains 92,000 images.
 The paper was published in 2015, and that time, the authors collected the data and they had to manually process and crop out the individual characters from the recieved data.   
 
-My project has eliminated all the physical human intervention and narrowed it down to a webpage, which tags and saves the characters.
+***My project has eliminated all the physical human intervention and narrowed it down to a remotely accesible webpage, which takes minimal human input in form of just some simple clicks, which help in the concatenation of the dataset.***
 
 
 
@@ -100,10 +100,11 @@ Average confidence of 4.0/4.1 model is : 89.83
 ## क्यों? 
 यह विचार की उत्पत्ति इंटरनेट पर उपलब्ध देवनागरी स्क्रिप्ट के लिए बड़े डेटासेट की अनुपस्थिति के कारण हुई थी। क्योंकि इसे OCR प्रौद्योगिकी के दृष्टिकोण से यह सबसे कम अन्वेषित डोमेन है [इस रिसर्च पेपर को देखें](https://www.researchgate.net/publication/304406868_Deep_learning_based_large_scale_handwritten_Devanagari_character_recognition)
 ### मौजूदा रिसर्च पेपर की प्रमुख भूमिका  
-इस परियोजना की शुरुआत से पहले, मैंने देवनागरी स्क्रिप्ट के लिए मौजूदा हस्तलेखित वर्ण डेटासेटों पर व्यापक अनुसंधान किया। और मैंने सबसे बड़ा डेटासेट **देवनागरी हस्तलेखित वर्ण डेटासेट** पाया। उसे ध्यानपूर्वक पढ़ने और लेखकों से संपर्क करने के बाद, मुझे उस समय विशेषज्ञ प्रश्ना से बहुत मूल्यवान सुझाव मिला, जो वर्तमान में सबसे बड़े उपलब्ध डेटासेट के एक लेखक थे जिसमें 92,000 छवियां हैं।
-पेपर 2015 में प्रकाशित हुआ था, और उस समय लेखकों ने डेटा एकत्र किया और उन्हें मैन्युअल प्रसेस और व्यक्तिगत वर्णों को प्राप्त डेटा से काटने के लिए प्रसंस्कृत करना हुआ था।  
+इस परियोजना की शुरुआत से पहले, मैंने देवनागरी स्क्रिप्ट के लिए मौजूदा हस्तलेखित वर्ण डेटासेटों पर व्यापक अनुसंधान किया। और मैंने सबसे बड़ा डेटासेट **देवनागरी हस्तलेखित वर्ण डेटासेट** पाया। उसे ध्यानपूर्वक पढ़ने और लेखकों से संपर्क करने के बाद, मुझे उस समय विशेषज्ञ प्रश्ना से बहुत मूल्यवान सुझाव मिला, जो वर्तमान में सबसे बड़े उपलब्ध डेटासेट के एक लेखक थे जिसमें 92,000 छवियां हैं।  <br> 
 
-मेरे परियोजना ने सभी भौतिक मानव हस्तक्षेप को हटा दिया है और इसे एक वेबपेज में घटित किया है, जो वर्डों को टैग करता है और उन्हें बचाता है।
+पेपर 2015 में प्रकाशित हुआ था, और उस समय लेखकों को शब्दों को मैन्युअल रूप से क्रॉप करना और प्रोसेस करना पड़ा जो बहुत ही कठिन कार्य है 
+
+***मेरे प्रोजेक्ट ने सभी भौतिक मानवीय हस्तक्षेप को समाप्त कर दिया है और इसे दूर से पहुंच योग्य वेबपेज तक सीमित कर दिया है, जो केवल कुछ साधारण क्लिक के रूप में न्यूनतम मानव इनपुट लेता है, जो डेटासेट के संयोजन में मदद करता है।***
 
 
 ## कैसे?
