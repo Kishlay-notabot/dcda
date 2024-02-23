@@ -23,7 +23,7 @@ This is my contribution to promote the digitization of my language Hindi and the
 The final project turned out to be drastically different than what it was planned like. This repository contains a pipeline of multiple programs which take input images of pages containing handwritten Hindi text, and perform the following processes in the order:  
 1. Pre processing the input images (Grayscale and Binarization if needed)
 2. Running word level OCR on them using parallel processing power of 7 workers together and exporting the bounding box data of all the words detected into a json file. (One image can contain thousands of words!)
-3. A program which uses the exported json file, and the input images and crops out all the words mentioned in the json file.
+3. A program which uses the exported json file, and the input images and crops out all the words mentioned in the json file into individual images. (Fun Fact: More than 100 thousand images were cropped out from the first batch of nearly 140-160 images, with a lot of false detections, which were handled out in the next versions of the code.)
 4. The fourth step is the website where users can just visit and crop out characters one at a time using the embedded Cropper.js instance, and labelling them using the virtual keyboard and submitting them to the database. (Visualization of the website below)
   
 ![Proposed Webpage](tesseractr/docs/doc.png)
