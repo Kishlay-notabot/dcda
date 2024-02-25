@@ -37,7 +37,8 @@ The ideation process of this project alone was months long and many versions wer
 * Pytesseract's introduction  
 * React.js [New skill!]  
 * Tesseract.js [New skill!]  
-* Cropper.js [New skill!]  
+* Cropper.js [New skill!]
+* Wrote example code for both Tesseract.js and Cropper.js which were either totally new [V2 for cropperjs has 0 contributed examples because it is new, same goes for the examples in the Tesseract.js repository which have complex examples related to bbox data and further accessibility of the exported data.]
 * Introduction to existing OCR technologies and softwares like gImageReader, EasyOCR etc. (Tried every existing technology to get desired results, but ended up making it from scratch)
 
 
