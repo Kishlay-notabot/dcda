@@ -26,7 +26,7 @@ The final project turned out to be drastically different than what it was planne
 3. A program which uses the exported json file, and the input images and crops out all the words mentioned in the json file into individual images. (Fun Fact: More than 100 thousand images were cropped out from the first batch of nearly 140-160 images, with a lot of false detections, which were handled out in the next versions of the code.)
 4. The fourth step is the website where users can just visit and crop out characters one at a time using the embedded Cropper.js instance, and labelling them using the virtual keyboard and submitting them to the database. (Visualization of the website below)
   
-![Proposed Webpage](tesseract.js_related_examples/docs/doc.png)
+![Proposed Webpage](tesseract_examples_and_files/docs/doc.png)
 
 The website has been finalized, and this will be the last part of the project, and after that, the data collection part will get initiated. [@simplycode](https://github.com/simplycode07/) is working on the backend part, and the website will be public and live after some thorough testing.
 
@@ -116,7 +116,7 @@ Average confidence of 4.0/4.1 model is : 89.83
 3. एक प्रोग्राम जो निर्यात किए गए json फ़ाइल, और इनपुट छवियों का उपयोग करता है और उन सभी शब्दों को जो ज्यसन फ़ाइल में उल्लिखित है, को क्रॉप करता है।
 4. चौथा कदम वेबसाइट है जिसमें उपयोगकर्ता सिर्फ एक बार में एक अक्षर को क्रॉप कर सकते हैं जो एम्बेडेड क्रॉपर.js इंस्टेंस का उपयोग करते हैं, और उन्हें वर्चुअल कीबोर्ड का उपयोग करके लेबल कर सकते हैं और उन्हें डेटाबेस में सबमिट कर सकते हैं। (वेबसाइट का दृश्यन नीचे)
   
-![प्रस्तावित वेबपेज](tesseract.js_related_examples/docs/doc.png)
+![प्रस्तावित वेबपेज](tesseract_examples_and_files/docs/doc.png)
 
 वेबसाइट को अंतिम रूप में निर्धारित किया गया है, और इसके बाद, डेटा संग्रहण भाग प्रारंभ होगा। [@simplycode](https://github.com/simplycode07/) बैकएंड हिस्से पर काम कर रहे हैं, और वेबसाइट को कुछ सौथी जाँच के बाद सार्थक बनाया जाएगा।
 
