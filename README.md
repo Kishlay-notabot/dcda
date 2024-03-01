@@ -28,7 +28,11 @@ The final project turned out to be drastically different than what it was planne
   
 ![Proposed Webpage](tesseract_examples_and_files/docs/doc.png)
 
-The website has been finalized, and this will be the last part of the project, and after that, the data collection part will get initiated. [@simplycode](https://github.com/simplycode07/) is working on the backend part, and the website will be public and live after some thorough testing.
+We are actively ideating and working on how this project and the corresponding research paper comes out, and how is it presented, many ideas are getting discussed, approved or scraped. There are lot of ways in which we can proceed with a strong result of the project.
+Updates will be added soon.   
+## Collaborating with  
+* [Justin Basett-Green](https://www.linkedin.com/in/jtbg/)
+* [Prashnna Kumar Gyawali](https://www.pkgyawali.com/)
 
 
 The ideation process of this project alone was months long and many versions were created and scraped, I would not cover those in this readme because it already is very long :'-)
