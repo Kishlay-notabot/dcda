@@ -35,6 +35,10 @@ Updates will be added soon.
 * [Prashnna Kumar Gyawali](https://www.pkgyawali.com/)
 
 
+## Dependencies
+For the JS files, Use `node.js` to run the files and install `canvas` and `tesseract.js` packages via `npm`
+
+
 The ideation process of this project alone was months long and many versions were created and scraped, I would not cover those in this readme because it already is very long :'-)
 # Outcomes, findings, problems and achievements gained during the process:
 ### What did I learn? 
@@ -79,15 +83,11 @@ Also read [ai.md](https://github.com/Kishlay-notabot/dcda/blob/main/tesseractr/d
 
 #### 4.0/4.1 Model
 ![Newer Model](/readme_files/newer.jpeg) 
-
-
-
 Average confidence of Legacy model is : 79.5  
-Average confidence of 4.0/4.1 model is : 89.83 
+Average confidence of 4.0/4.1 model is : 89.83  
 
 # Credits: 
-* [Subhrajyoti Dasgupta](https://github.com/subhrajyotidasgupta/DevanagariHTR)  
-* Prashnna Kumar Gyawali [Stanford University]  
+* [Subhrajyoti Dasgupta](https://github.com/subhrajyotidasgupta/DevanagariHTR)   
 * [The mentioned research paper](https://www.researchgate.net/publication/304406868_Deep_learning_based_large_scale_handwritten_Devanagari_character_recognition)
 * [@simplycode](https://github.com/simplycode07/)
 
