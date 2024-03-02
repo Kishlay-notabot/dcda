@@ -67,8 +67,9 @@ Also read [ai.md](https://github.com/Kishlay-notabot/dcda/blob/main/tesseractr/d
 #### Cropper.js
 [#1138](https://github.com/fengyuanchen/cropperjs/issues/1138)
 
-## Pull requests and active discussions:
+## Pull requests and active discussions: 
 
+[#883](https://github.com/naptha/tesseract.js/issues/883)  
 [#1140](https://github.com/fengyuanchen/cropperjs/pull/1140) Added example for V2 of Cropper.js  
 [#878](https://github.com/naptha/tesseract.js/pull/878) Added a pull request for adding complex examples of bbox data manipulation and output generation.
 
