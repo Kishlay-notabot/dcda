@@ -31,22 +31,22 @@ async function processImages() {
 
     // Process images in parallel
     console.log('Processing images and performing OCR:');
-    
+
     const jobPromises = imageArr.map(async (imagePath) => {
       console.log(`Scheduling image processing for: ${imagePath}`);
-      return scheduler.addJob('recognize', imagePath)
-        .then(out => ({
-          imageName: path.basename(imagePath),
-          words: out.data.words.map(word => ({
-            text: word.text,
-            confidence: word.confidence.toFixed(2),
-            bbox: word.bbox,
-          })),
-        }))
-        .catch(error => ({
-          imageName: path.basename(imagePath),
-          error: error.message,
-        }));
+      const result = await scheduler.addJob('recognize', imagePath);
+
+      const wordsWithId = result.data.words.map((word, index) => ({
+        wordId: index + 1,
+        text: word.text,
+        confidence: word.confidence.toFixed(2),
+        bbox: word.bbox,
+      }));
+
+      return {
+        imageName: path.basename(imagePath),
+        words: wordsWithId,
+      };
     });
 
     const results = await Promise.all(jobPromises);
@@ -68,5 +68,7 @@ async function processImages() {
 
 // save json file to testing dir
 
-// use'compress-archive * batchN.zip in /tm/testing dir
+// use 'compress-archive * batchN.zip in /tm/testing dir
 processImages();
+
+// wordID
