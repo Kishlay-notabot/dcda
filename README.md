@@ -20,6 +20,15 @@ This is my contribution to promote the digitization of my language Hindi and the
 
 
 ## How?
+> ***The depicted app illustration below does not align with our current conceptualization, i.e. the illustration of the web app's idea is outdated. Why? Read below***,
+> 
+> We are currently planning to release the site as a tool which will assist in generation of word level statistics and data but *not* like symbol level manipulation / collection as illustrated below. It can
+> be an addition to the project later on but the current MVP we are planning to release is just a tool which asks humans to verify Tesseract engine's output. The reason of the temporary delay of the symbol level
+> dataset creation web app is because we aren't sure about the usability of the dataset produced with current technology, because the dataset generated will not be uniform, in terms of image resolution, size or DPI.
+
+
+
+
 The final project turned out to be drastically different than what it was planned like. This repository contains a pipeline of multiple programs which take input images of pages containing handwritten Hindi text, and perform the following processes in the order:  
 1. Pre processing the input images (Grayscale and Binarization if needed)
 2. Running word level OCR on them using parallel processing power of 7 workers together and exporting the bounding box data of all the words detected into a json file. (One image can contain thousands of words!)
