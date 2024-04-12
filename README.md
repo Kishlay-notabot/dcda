@@ -3,6 +3,8 @@
 <br>
 
 [हिंदी संस्करण पढ़ने के लिए यहां क्लिक करें](https://github.com/Kishlay-notabot/dcda/?tab=readme-ov-file#hindi-translation)
+
+# EDIT: Website is now live! visit [dcda.io](https://dcda.io)
 ## What?  
 This project is made for automating the process (to an extent) of making curated handwritten datasets for any language. The project focuses on Devanagari but it can be used universally with all the languages compatible with the Tesseract OCR engine.
   
