@@ -51,16 +51,6 @@ For the JS files, Use `node.js` to run the files and install `canvas` and `tesse
 
 
 The ideation process of this project alone was months long and many versions were created and scraped, I would not cover those in this readme because it already is very long :'-)
-# Outcomes, findings, problems and achievements gained during the process:
-### What did I learn? 
-* Pytesseract's introduction  
-* React.js [New skill!]  
-* Tesseract.js [New skill!]  
-* Cropper.js [New skill!]
-* Wrote example code for both Tesseract.js and Cropper.js which were either totally new [V2 for cropperjs has 0 contributed examples because it is new, same goes for the examples in the Tesseract.js repository which have complex examples related to bbox data and further accessibility of the exported data.]
-* Introduction to existing OCR technologies and softwares like gImageReader, EasyOCR etc. (Tried every existing technology to get desired results, but ended up making it from scratch)
-
-
 
 * Legacy version of tessdata is very inaccurate  
   
